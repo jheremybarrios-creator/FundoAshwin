@@ -1,0 +1,453 @@
+	<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundo Ashwin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root{
+    --bg:#F5F1E8; --surface:#FFFFFF; --border:#DDD6C4; --ink:#2A2820; --muted:#756F5C;
+    --primary:#3D5A3D; --primary-dark:#2A3F2A; --primary-light:#E7EEDF;
+    --accent:#C08A2E; --accent-light:#F5E9CF;
+    --danger:#B23A2E; --danger-light:#F6E1DD; --success:#3D6B3D; --success-light:#E2ECDD;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;margin:0}
+  h1{font-size:22px}h2{font-size:18px}h3{font-size:15px}
+  button{font-family:inherit;font-size:14px;cursor:pointer;border-radius:8px}
+  input,select{font-family:inherit;font-size:14px;border-radius:8px;border:1px solid var(--border);padding:8px 10px;background:#fff;color:var(--ink)}
+  input:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--border)}
+  td{padding:8px 8px;border-bottom:1px solid var(--border)}
+  .app{display:flex;min-height:100vh}
+  .sidebar{width:230px;flex-shrink:0;background:var(--primary-dark);color:#fff;padding:1.25rem 1rem;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sidebar .brand{font-family:Georgia,serif;font-size:19px;margin-bottom:2px}
+  .sidebar .brand-sub{font-size:11px;color:#C9D4C0;margin-bottom:22px}
+  .sidebar .group-label{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#9FB093;margin:18px 6px 6px}
+  .navitem{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:9px 10px;background:transparent;color:#E7EEDF;border:none;border-radius:8px;margin-bottom:2px}
+  .navitem:hover{background:rgba(255,255,255,0.08)}
+  .navitem.active{background:var(--accent);color:#2A1F0A;font-weight:600}
+  .main{flex:1;min-width:0;padding:1.75rem 2rem;max-width:980px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem;margin-bottom:1.1rem}
+  .grid{display:grid;gap:12px}
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media (max-width:700px){.grid-3,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{width:74px;padding:1rem 0.5rem}.sidebar .brand,.sidebar .brand-sub,.sidebar .group-label,.navitem span{display:none}.navitem{justify-content:center}}
+  .metric{background:var(--primary-light);border-radius:var(--radius);padding:0.85rem 1rem}
+  .metric .label{font-size:12px;color:var(--muted);margin-bottom:4px}
+  .metric .value{font-size:20px;font-weight:600;color:var(--primary-dark)}
+  .metric.accent{background:var(--accent-light)}
+  .metric.accent .value{color:#7A5A1E}
+  .metric.success{background:var(--success-light)}
+  .metric.success .value{color:var(--success)}
+  .btn-primary{background:var(--primary);color:#fff;border:none;padding:9px 16px}
+  .btn-primary:hover{background:var(--primary-dark)}
+  .btn-ghost{background:transparent;border:1px solid var(--border);padding:8px 12px;color:var(--ink)}
+  .btn-danger{background:transparent;border:none;color:var(--danger);padding:4px 8px;font-size:13px}
+  .form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:0.9rem}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:12px;color:var(--muted)}
+  .field input,.field select{min-width:130px}
+  .empty{color:var(--muted);font-size:13.5px;padding:1rem 0;text-align:center}
+  .badge{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary-dark)}
+  .subtle{color:var(--muted);font-size:13px}
+  .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .toast{position:fixed;bottom:16px;right:16px;background:var(--primary-dark);color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:50}
+  .toast.show{opacity:1}
+  .config-banner{background:#FCEBEB;border:1px solid #F0999A;color:#791F1F;padding:14px 18px;border-radius:10px;margin:20px;font-size:13.5px}
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+  CONFIGURACIÓN: pega aquí los datos de tu proyecto de Supabase.
+  Los encuentras en: Supabase -> tu proyecto -> Settings -> API
+  SUPABASE_URL  = "Project URL"
+  SUPABASE_KEY  = "anon public" key
+======================================================================= -->
+<script>
+  const SUPABASE_URL = "https://aqgyevvcehocrpyuwdwd.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_dDSZQoPFsy14gSRxdNSgsw_poWkxRhn";
+</script>
+
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">Fundo Ashwin</div>
+    <div class="brand-sub">Gestión del negocio</div>
+    <div class="group-label">Gestión agrícola</div>
+    <button class="navitem" data-screen="dashboard"><span>Panel general</span></button>
+    <button class="navitem" data-screen="parcelas"><span>Parcelas</span></button>
+    <button class="navitem" data-screen="siembras"><span>Siembras</span></button>
+    <button class="navitem" data-screen="ganado"><span>Ganado</span></button>
+    <button class="navitem" data-screen="movimientos"><span>Costos e ingresos</span></button>
+    <button class="navitem" data-screen="reportes"><span>Reportes</span></button>
+    <div class="group-label">Control de leche</div>
+    <button class="navitem" data-screen="registro"><span>Registro diario</span></button>
+    <button class="navitem" data-screen="liquidacion"><span>Liquidación quincenal</span></button>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let sb = null;
+if(SUPABASE_URL.startsWith('http') && SUPABASE_KEY.length > 10){
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function fmtMoney(n){ return 'S/ ' + (Math.round(n*100)/100).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtNum(n){ return Math.round(n*100)/100; }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+// ---------- state ----------
+let state = { parcelas: [], siembras: [], ganado: [], movimientos: [], personas: [], grupos: [], registros: [] };
+const CATEGORIAS_GANADERIA = ['Luz','Agua','Alimentación','Vitaminas','Medicinas','Otro'];
+const CATEGORIAS_AGRICOLA = ['Semillas','Riego','Mano de obra','Fertilizante','Maquinaria','Otro'];
+
+async function fetchAll(){
+  const [p, s, g, m, per, gr, r] = await Promise.all([
+    sb.from('parcelas').select('*').order('created_at'),
+    sb.from('siembras').select('*').order('created_at'),
+    sb.from('ganado').select('*').order('created_at'),
+    sb.from('movimientos').select('*').order('fecha', {ascending:false}),
+    sb.from('personas').select('*'),
+    sb.from('grupos').select('*'),
+    sb.from('registros').select('*').order('fecha', {ascending:false})
+  ]);
+  state.parcelas = p.data || []; state.siembras = s.data || []; state.ganado = g.data || [];
+  state.movimientos = m.data || []; state.personas = per.data || []; state.grupos = gr.data || [];
+  state.registros = r.data || [];
+}
+
+async function insertRow(table, row){
+  const { data, error } = await sb.from(table).insert(row).select().single();
+  if(error){ showToast('No se pudo guardar: ' + error.message); return null; }
+  return data;
+}
+async function deleteRow(table, id){
+  const { error } = await sb.from(table).delete().eq('id', id);
+  if(error){ showToast('No se pudo eliminar: ' + error.message); return false; }
+  return true;
+}
+
+// ---------- nav ----------
+let currentScreen = 'dashboard';
+function setActiveNav(){
+  document.querySelectorAll('.navitem').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('data-screen') === currentScreen);
+  });
+}
+document.querySelectorAll('.navitem').forEach(b=>{
+  b.addEventListener('click', ()=>{ currentScreen = b.getAttribute('data-screen'); render(); });
+});
+
+function render(){
+  setActiveNav();
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  const renderers = {
+    dashboard: renderDashboard, parcelas: renderParcelas, siembras: renderSiembras,
+    ganado: renderGanado, movimientos: renderMovimientos, reportes: renderReportes,
+    registro: renderRegistro, liquidacion: renderLiquidacion
+  };
+  (renderers[currentScreen] || renderDashboard)(main);
+}
+function card(title, innerHTML){
+  const d = document.createElement('div'); d.className='card';
+  d.innerHTML = (title ? '<div class="section-title"><h2>'+title+'</h2></div>' : '') + innerHTML;
+  return d;
+}
+function titleBlock(title, sub){
+  const d = document.createElement('div');
+  d.innerHTML = '<h1 style="margin-bottom:2px">'+title+'</h1><p class="subtle" style="margin-bottom:18px">'+sub+'</p>';
+  return d;
+}
+function field(id,label,type,placeholder){
+  return '<div class="field"><label for="'+id+'">'+label+'</label><input id="'+id+'" type="'+type+'" placeholder="'+(placeholder||'')+'" '+(type==='date'&&placeholder?('value="'+placeholder+'"'):'')+'></div>';
+}
+function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function metric(label, value, tone){
+  const cls = tone==='accent'?'metric accent':tone==='success'?'metric success':'metric';
+  return '<div class="'+cls+'"><div class="label">'+label+'</div><div class="value">'+value+'</div></div>';
+}
+
+// ---------- Dashboard ----------
+function renderDashboard(main){
+  const thisMonth = todayISO().slice(0,7);
+  const costosMes = state.movimientos.filter(m=>m.tipo==='costo' && m.fecha.slice(0,7)===thisMonth).reduce((s,m)=>s+Number(m.monto),0);
+  const ingresosMes = state.movimientos.filter(m=>m.tipo==='ingreso' && m.fecha.slice(0,7)===thisMonth).reduce((s,m)=>s+Number(m.monto),0);
+  const lecheHoy = state.registros.filter(r=>r.fecha===todayISO()).reduce((s,r)=>s+Number(r.litros),0);
+  main.appendChild(titleBlock('Panel general','Resumen de Fundo Ashwin'));
+  main.appendChild(card('', '<div class="grid grid-4">'+
+    metric('Parcelas activas', state.parcelas.length) + metric('Ganado registrado', state.ganado.length) +
+    metric('Leche hoy', fmtNum(lecheHoy)+' L', 'accent') + metric('Costos del mes', fmtMoney(costosMes)) + '</div>'));
+  main.appendChild(card('', '<div class="grid grid-2">'+
+    metric('Ingresos del mes', fmtMoney(ingresosMes), 'success') +
+    metric('Balance del mes', fmtMoney(ingresosMes-costosMes), (ingresosMes-costosMes>=0?'success':'')) + '</div>'));
+}
+
+// ---------- Parcelas ----------
+function renderParcelas(main){
+  main.appendChild(titleBlock('Parcelas','Áreas de cultivo del fundo'));
+  const formCard = card('Agregar parcela', '<div class="form-row">'+
+    field('p-nombre','Nombre','text','Parcela D') + field('p-area','Área (ha)','number','1.5') +
+    field('p-ubicacion','Ubicación','text','Sector norte') + '<button class="btn-primary" id="btn-add-parcela">Agregar</button></div>');
+  main.appendChild(formCard);
+  const rows = state.parcelas.map(p=>{
+    const enSiembra = state.siembras.find(s=>s.parcela_id===p.id && s.estado!=='Cosechado');
+    return '<tr><td>'+esc(p.nombre)+'</td><td>'+fmtNum(p.area)+' ha</td><td>'+esc(p.ubicacion||'—')+'</td><td>'+(enSiembra?esc(enSiembra.cultivo):'<span class="subtle">sin siembra activa</span>')+'</td>'+
+      '<td><button class="btn-danger" data-del="'+p.id+'">Eliminar</button></td></tr>';
+  }).join('');
+  const listCard = card('Parcelas registradas', state.parcelas.length ?
+    '<table><tr><th>Nombre</th><th>Área</th><th>Ubicación</th><th>Cultivo actual</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay parcelas registradas.</div>');
+  main.appendChild(listCard);
+  document.getElementById('btn-add-parcela').addEventListener('click', async ()=>{
+    const nombre = val('p-nombre'), area = val('p-area'), ubicacion = val('p-ubicacion');
+    if(!nombre || !area){ showToast('Falta nombre o área.'); return; }
+    const row = await insertRow('parcelas', {nombre, area:Number(area), ubicacion});
+    if(row){ state.parcelas.push(row); render(); }
+  });
+  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-del');
+    if(await deleteRow('parcelas', id)){ state.parcelas = state.parcelas.filter(p=>p.id!==id); render(); }
+  }));
+}
+
+// ---------- Siembras ----------
+function renderSiembras(main){
+  main.appendChild(titleBlock('Siembras','Qué se sembró en cada parcela y su estado'));
+  if(!state.parcelas.length){ main.appendChild(card('', '<div class="empty">Primero registra una parcela.</div>')); return; }
+  const options = state.parcelas.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');
+  const formCard = card('Agregar siembra', '<div class="form-row">'+
+    '<div class="field"><label>Parcela</label><select id="s-parcela">'+options+'</select></div>' +
+    field('s-cultivo','Cultivo','text','Alfalfa') + field('s-fsiembra','Fecha de siembra','date','') + field('s-fcosecha','Cosecha estimada','date','') +
+    '<div class="field"><label>Estado</label><select id="s-estado"><option>Sembrado</option><option>En crecimiento</option><option>Cosechado</option></select></div>' +
+    '<button class="btn-primary" id="btn-add-siembra">Agregar</button></div>');
+  main.appendChild(formCard);
+  const rows = state.siembras.map(s=>{
+    const p = state.parcelas.find(pp=>pp.id===s.parcela_id);
+    return '<tr><td>'+esc(p?p.nombre:'—')+'</td><td>'+esc(s.cultivo)+'</td><td>'+(s.fecha_siembra||'—')+'</td><td>'+(s.fecha_cosecha||'—')+'</td><td><span class="badge">'+esc(s.estado)+'</span></td>'+
+      '<td><button class="btn-danger" data-del="'+s.id+'">Eliminar</button></td></tr>';
+  }).join('');
+  const listCard = card('Siembras registradas', state.siembras.length ?
+    '<table><tr><th>Parcela</th><th>Cultivo</th><th>Siembra</th><th>Cosecha est.</th><th>Estado</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay siembras registradas.</div>');
+  main.appendChild(listCard);
+  document.getElementById('btn-add-siembra').addEventListener('click', async ()=>{
+    const cultivo = val('s-cultivo');
+    if(!cultivo){ showToast('Falta el nombre del cultivo.'); return; }
+    const row = await insertRow('siembras', {parcela_id:val('s-parcela'), cultivo, fecha_siembra:val('s-fsiembra')||null, fecha_cosecha:val('s-fcosecha')||null, estado:val('s-estado')});
+    if(row){ state.siembras.push(row); render(); }
+  });
+  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-del');
+    if(await deleteRow('siembras', id)){ state.siembras = state.siembras.filter(s=>s.id!==id); render(); }
+  }));
+}
+
+// ---------- Ganado ----------
+function renderGanado(main){
+  main.appendChild(titleBlock('Ganado','Animales del fundo y su gasto operativo'));
+  const formCard = card('Agregar animal', '<div class="form-row">'+
+    field('g-arete','Arete / ID','text','052') + field('g-tipo','Tipo','text','Vaca lechera') + field('g-fnac','Fecha nacimiento','date','') +
+    '<div class="field"><label>Estado</label><select id="g-estado"><option>Activo</option><option>Seco</option><option>Vendido</option></select></div>' +
+    '<button class="btn-primary" id="btn-add-ganado">Agregar</button></div>');
+  main.appendChild(formCard);
+  const rows = state.ganado.map(g=>{
+    const gasto = state.movimientos.filter(m=>m.ganado_id===g.id && m.tipo==='costo').reduce((s,m)=>s+Number(m.monto),0);
+    return '<tr><td>'+esc(g.arete)+'</td><td>'+esc(g.tipo)+'</td><td>'+(g.fecha_nacimiento||'—')+'</td><td><span class="badge">'+esc(g.estado)+'</span></td><td>'+fmtMoney(gasto)+'</td>'+
+      '<td><button class="btn-danger" data-del="'+g.id+'">Eliminar</button></td></tr>';
+  }).join('');
+  const listCard = card('Animales registrados', state.ganado.length ?
+    '<table><tr><th>Arete</th><th>Tipo</th><th>Nacimiento</th><th>Estado</th><th>Gasto total</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay animales registrados.</div>');
+  main.appendChild(listCard);
+  document.getElementById('btn-add-ganado').addEventListener('click', async ()=>{
+    const arete = val('g-arete');
+    if(!arete){ showToast('Falta el arete o ID.'); return; }
+    const row = await insertRow('ganado', {arete, tipo:val('g-tipo'), fecha_nacimiento:val('g-fnac')||null, estado:val('g-estado')});
+    if(row){ state.ganado.push(row); render(); }
+  });
+  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-del');
+    if(await deleteRow('ganado', id)){ state.ganado = state.ganado.filter(g=>g.id!==id); render(); }
+  }));
+}
+
+// ---------- Costos e ingresos ----------
+function renderMovimientos(main){
+  main.appendChild(titleBlock('Costos e ingresos','Registro de gastos y entradas de dinero'));
+  const parcelaOpts = '<option value="">—</option>' + state.parcelas.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');
+  const ganadoOpts = '<option value="">—</option>' + state.ganado.map(g=>'<option value="'+g.id+'">'+esc(g.arete)+' · '+esc(g.tipo)+'</option>').join('');
+  const formCard = card('Agregar movimiento', '<div class="form-row">'+
+    '<div class="field"><label>Tipo</label><select id="m-tipo"><option value="costo">Costo</option><option value="ingreso">Ingreso</option></select></div>' +
+    '<div class="field"><label>Área</label><select id="m-area"><option value="agricola">Agrícola</option><option value="ganaderia">Ganadería</option></select></div>' +
+    '<div class="field"><label>Categoría</label><select id="m-categoria"></select></div>' +
+    field('m-monto','Monto (S/)','number','150') + field('m-fecha','Fecha','date',todayISO()) +
+    '<div class="field"><label>Parcela (opcional)</label><select id="m-parcela">'+parcelaOpts+'</select></div>' +
+    '<div class="field"><label>Animal (opcional)</label><select id="m-ganado">'+ganadoOpts+'</select></div>' +
+    field('m-desc','Descripción','text','') + '<button class="btn-primary" id="btn-add-mov">Agregar</button></div>');
+  main.appendChild(formCard);
+  function refreshCategorias(){
+    const cats = val('m-area')==='ganaderia' ? CATEGORIAS_GANADERIA : CATEGORIAS_AGRICOLA;
+    document.getElementById('m-categoria').innerHTML = cats.map(c=>'<option>'+c+'</option>').join('');
+  }
+  refreshCategorias();
+  document.getElementById('m-area').addEventListener('change', refreshCategorias);
+  const sorted = [...state.movimientos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const rows = sorted.map(m=>{
+    const p = state.parcelas.find(pp=>pp.id===m.parcela_id);
+    const g = state.ganado.find(gg=>gg.id===m.ganado_id);
+    const ref = p ? p.nombre : (g ? g.arete : '—');
+    return '<tr><td>'+m.fecha+'</td><td><span class="badge" style="background:'+(m.tipo==='costo'?'var(--danger-light)':'var(--success-light)')+';color:'+(m.tipo==='costo'?'var(--danger)':'var(--success)')+'">'+(m.tipo==='costo'?'Costo':'Ingreso')+'</span></td><td>'+esc(m.area==='ganaderia'?'Ganadería':'Agrícola')+'</td><td>'+esc(m.categoria)+'</td><td>'+esc(ref)+'</td><td>'+fmtMoney(m.monto)+'</td>'+
+      '<td><button class="btn-danger" data-del="'+m.id+'">Eliminar</button></td></tr>';
+  }).join('');
+  const listCard = card('Movimientos registrados', state.movimientos.length ?
+    '<table><tr><th>Fecha</th><th>Tipo</th><th>Área</th><th>Categoría</th><th>Referencia</th><th>Monto</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay movimientos registrados.</div>');
+  main.appendChild(listCard);
+  document.getElementById('btn-add-mov').addEventListener('click', async ()=>{
+    const monto = val('m-monto');
+    if(!monto || Number(monto)<=0){ showToast('Ingresa un monto válido.'); return; }
+    const row = await insertRow('movimientos', {tipo:val('m-tipo'), area:val('m-area'), categoria:val('m-categoria'), monto:Number(monto), fecha:val('m-fecha')||todayISO(), parcela_id:val('m-parcela')||null, ganado_id:val('m-ganado')||null, descripcion:val('m-desc')});
+    if(row){ state.movimientos.push(row); render(); }
+  });
+  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-del');
+    if(await deleteRow('movimientos', id)){ state.movimientos = state.movimientos.filter(m=>m.id!==id); render(); }
+  }));
+}
+
+// ---------- Reportes ----------
+function renderReportes(main){
+  main.appendChild(titleBlock('Reportes','Costos vs ingresos y producción de leche por mes'));
+  const byMonth = {};
+  state.movimientos.forEach(m=>{ const k=m.fecha.slice(0,7); byMonth[k]=byMonth[k]||{costo:0,ingreso:0}; byMonth[k][m.tipo]+=Number(m.monto); });
+  const months = Object.keys(byMonth).sort().slice(-6);
+  const maxVal = Math.max(1, ...months.flatMap(m=>[byMonth[m].costo, byMonth[m].ingreso]));
+  const barsHtml = months.length ? '<div style="display:flex;gap:18px;align-items:flex-end">'+months.map(m=>{
+    const c = byMonth[m].costo, i = byMonth[m].ingreso;
+    return '<div style="text-align:center"><div style="display:flex;align-items:flex-end;gap:5px;height:140px">'+
+      '<div style="width:20px;background:var(--danger);opacity:0.75;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(c/maxVal*130))+'px"></div>'+
+      '<div style="width:20px;background:var(--success);opacity:0.75;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(i/maxVal*130))+'px"></div>'+
+      '</div><div class="subtle" style="font-size:11px;margin-top:4px">'+m+'</div></div>';
+  }).join('')+'</div>' : '';
+  const legend = '<div style="display:flex;gap:16px;margin-top:14px;font-size:12.5px" class="subtle">'+
+    '<span><span style="display:inline-block;width:10px;height:10px;background:var(--danger);opacity:0.75;border-radius:2px;margin-right:5px"></span>Costos</span>'+
+    '<span><span style="display:inline-block;width:10px;height:10px;background:var(--success);opacity:0.75;border-radius:2px;margin-right:5px"></span>Ingresos</span></div>';
+  main.appendChild(card('Costos vs ingresos (últimos meses)', months.length ? barsHtml+legend : '<div class="empty">Aún no hay movimientos para graficar.</div>'));
+  const byMonthLeche = {};
+  state.registros.forEach(r=>{ const k=r.fecha.slice(0,7); byMonthLeche[k]=(byMonthLeche[k]||0)+Number(r.litros); });
+  const monthsL = Object.keys(byMonthLeche).sort().slice(-6);
+  const maxL = Math.max(1, ...monthsL.map(m=>byMonthLeche[m]));
+  const lecheBars = monthsL.length ? '<div style="display:flex;gap:18px;align-items:flex-end">'+monthsL.map(m=>{
+    return '<div style="text-align:center"><div style="height:110px;display:flex;align-items:flex-end"><div style="width:26px;background:var(--accent);opacity:0.85;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(byMonthLeche[m]/maxL*100))+'px"></div></div><div class="subtle" style="font-size:11px;margin-top:4px">'+m+'</div><div style="font-size:11px;font-weight:600">'+fmtNum(byMonthLeche[m])+' L</div></div>';
+  }).join('')+'</div>' : '<div class="empty">Aún no hay registros de leche.</div>';
+  main.appendChild(card('Producción de leche por mes', lecheBars));
+}
+
+// ---------- Registro diario ----------
+function renderRegistro(main){
+  main.appendChild(titleBlock('Registro diario','Litros entregados por persona y turno'));
+  state.grupos.forEach(grupo=>{
+    const miembros = grupo.miembro_ids.map(id=>state.personas.find(p=>p.id===id)).filter(Boolean);
+    const rowsForm = miembros.map(p=>
+      '<div class="form-row" style="margin-bottom:6px">'+
+      '<div class="field" style="min-width:90px"><label>&nbsp;</label><div style="padding-top:6px">'+esc(p.nombre)+'</div></div>'+
+      '<div class="field"><label>Turno</label><select id="turno-'+grupo.id+'-'+p.id+'"><option>Mañana</option><option>Tarde</option></select></div>'+
+      '<div class="field"><label>Litros</label><input type="number" id="litros-'+grupo.id+'-'+p.id+'" placeholder="0" style="width:90px"></div></div>'
+    ).join('');
+    const c = card(grupo.nombre + ' · ' + miembros.map(m=>m.nombre).join(', '),
+      '<div class="form-row" style="margin-bottom:10px">'+field('fecha-'+grupo.id,'Fecha','date',todayISO())+'</div>'+rowsForm+
+      '<button class="btn-primary" data-guardar="'+grupo.id+'" style="margin-top:8px">Guardar registro del día</button>');
+    main.appendChild(c);
+    c.querySelector('[data-guardar]').addEventListener('click', async ()=>{
+      const fecha = val('fecha-'+grupo.id) || todayISO();
+      let added = 0;
+      for(const p of miembros){
+        const litros = val('litros-'+grupo.id+'-'+p.id);
+        const turno = val('turno-'+grupo.id+'-'+p.id);
+        if(litros && Number(litros)>0){
+          const row = await insertRow('registros', {persona_id:p.id, grupo_id:grupo.id, fecha, turno, litros:Number(litros)});
+          if(row){ state.registros.push(row); added++; }
+        }
+      }
+      if(!added){ showToast('Ingresa al menos un valor de litros.'); return; }
+      showToast('Registro guardado.'); render();
+    });
+  });
+  const recent = [...state.registros].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,15);
+  const rows = recent.map(r=>{
+    const p = state.personas.find(pp=>pp.id===r.persona_id);
+    const g = state.grupos.find(gg=>gg.id===r.grupo_id);
+    return '<tr><td>'+r.fecha+'</td><td>'+esc(g?g.nombre:'—')+'</td><td>'+esc(p?p.nombre:'—')+'</td><td>'+esc(r.turno)+'</td><td>'+fmtNum(r.litros)+' L</td>'+
+      '<td><button class="btn-danger" data-del="'+r.id+'">Eliminar</button></td></tr>';
+  }).join('');
+  const listCard = card('Últimos registros', state.registros.length ?
+    '<table><tr><th>Fecha</th><th>Grupo</th><th>Persona</th><th>Turno</th><th>Litros</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay registros.</div>');
+  main.appendChild(listCard);
+  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-del');
+    if(await deleteRow('registros', id)){ state.registros = state.registros.filter(r=>r.id!==id); render(); }
+  }));
+}
+
+// ---------- Liquidación quincenal ----------
+function renderLiquidacion(main){
+  main.appendChild(titleBlock('Liquidación quincenal','Lo cobrado por grupo vs. lo pagado a cada persona'));
+  const today = new Date();
+  const defaultStart = new Date(today); defaultStart.setDate(today.getDate()-14);
+  const startId='liq-start', endId='liq-end';
+  const rangeCard = card('Periodo', '<div class="form-row">'+
+    field(startId,'Desde','date', defaultStart.toISOString().slice(0,10)) + field(endId,'Hasta','date', todayISO()) +
+    '<button class="btn-primary" id="btn-calcular">Calcular</button></div>');
+  main.appendChild(rangeCard);
+  const resultsWrap = document.createElement('div');
+  main.appendChild(resultsWrap);
+  function calcular(){
+    const start = val(startId), end = val(endId);
+    resultsWrap.innerHTML = '';
+    state.grupos.forEach(grupo=>{
+      const miembros = grupo.miembro_ids.map(id=>state.personas.find(p=>p.id===id)).filter(Boolean);
+      const regs = state.registros.filter(r=>r.grupo_id===grupo.id && r.fecha>=start && r.fecha<=end);
+      const litrosTotal = regs.reduce((s,r)=>s+Number(r.litros),0);
+      const precioVenta = grupo.precio_venta_base * 1.18;
+      const totalVenta = litrosTotal * precioVenta;
+      const porPersona = miembros.map(p=>{
+        const litros = regs.filter(r=>r.persona_id===p.id).reduce((s,r)=>s+Number(r.litros),0);
+        return {persona:p, litros, pago: litros*p.precio};
+      });
+      const totalPagado = porPersona.reduce((s,x)=>s+x.pago,0);
+      const margen = totalVenta - totalPagado;
+      const rows = porPersona.map(x=>'<tr><td>'+esc(x.persona.nombre)+'</td><td style="text-align:right">'+fmtNum(x.litros)+' L</td><td style="text-align:right">'+fmtMoney(x.persona.precio)+'</td><td style="text-align:right">'+fmtMoney(x.pago)+'</td></tr>').join('');
+      const html = '<p class="subtle" style="margin-bottom:12px">Precio de venta al comprador: '+fmtMoney(grupo.precio_venta_base)+' + IGV (18%) = '+fmtMoney(precioVenta)+'/L</p>'+
+        '<div class="grid grid-3" style="margin-bottom:14px">'+ metric('Litros del periodo', fmtNum(litrosTotal)+' L') + metric('Cobrado al comprador', fmtMoney(totalVenta), 'accent') + metric('Margen del negocio', fmtMoney(margen), margen>=0?'success':'') + '</div>'+
+        (porPersona.length ? '<table><tr><th>Persona</th><th style="text-align:right">Litros</th><th style="text-align:right">Precio/L</th><th style="text-align:right">A liquidar</th></tr>'+rows+'</table>' : '<div class="empty">Sin registros en este periodo.</div>');
+      resultsWrap.appendChild(card(grupo.nombre + ' · ' + miembros.map(m=>m.nombre).join(', '), html));
+    });
+  }
+  document.getElementById('btn-calcular').addEventListener('click', calcular);
+  calcular();
+}
+
+// ---------- boot ----------
+(async function(){
+  if(!sb){
+    document.getElementById('main').innerHTML = '<div class="config-banner">Falta conectar la base de datos: abre este archivo, busca <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> cerca del inicio, y pega ahí los datos de tu proyecto de Supabase (Settings → API).</div>';
+    return;
+  }
+  document.getElementById('main').innerHTML = '<div class="empty">Cargando datos…</div>';
+  await fetchAll();
+  render();
+})();
+</script>
+</body>
+</html>
