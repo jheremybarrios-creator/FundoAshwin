@@ -38,7 +38,18 @@
   .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
   .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-  @media (max-width:700px){.grid-3,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{width:74px;padding:1rem 0.5rem}.sidebar .brand,.sidebar .brand-sub,.sidebar .group-label,.navitem span{display:none}.navitem{justify-content:center}}
+  @media (max-width:700px){.grid-3,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .mobile-topbar{display:none}
+  .overlay{display:none}
+  @media (max-width:700px){
+    .mobile-topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--primary-dark);color:#fff;position:sticky;top:0;z-index:40}
+    .mobile-topbar button{background:transparent;border:none;color:#fff;font-size:22px;line-height:1;padding:2px 6px}
+    .mobile-topbar .brand{font-family:Georgia,serif;font-size:17px}
+    .sidebar{position:fixed;left:0;top:0;height:100vh;width:230px;transform:translateX(-100%);transition:transform .25s ease;z-index:50}
+    .sidebar.open{transform:translateX(0)}
+    .main{padding:1rem}
+    .overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:45}
+  }
   .metric{background:var(--primary-light);border-radius:var(--radius);padding:0.85rem 1rem}
   .metric .label{font-size:12px;color:var(--muted);margin-bottom:4px}
   .metric .value{font-size:20px;font-weight:600;color:var(--primary-dark)}
@@ -76,6 +87,11 @@
   const SUPABASE_KEY = "sb_publishable_dDSZQoPFsy14gSRxdNSgsw_poWkxRhn";
 </script>
 
+<div class="mobile-topbar">
+  <button id="btn-menu" aria-label="Abrir menú">☰</button>
+  <span class="brand">Fundo Ashwin</span>
+</div>
+<div class="overlay" id="overlay"></div>
 <div class="app">
   <nav class="sidebar" id="sidebar">
     <div class="brand">Fundo Ashwin</div>
@@ -149,8 +165,24 @@ function setActiveNav(){
   });
 }
 document.querySelectorAll('.navitem').forEach(b=>{
-  b.addEventListener('click', ()=>{ currentScreen = b.getAttribute('data-screen'); render(); });
+  b.addEventListener('click', ()=>{
+    currentScreen = b.getAttribute('data-screen'); render();
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  });
 });
+const btnMenu = document.getElementById('btn-menu');
+const overlayEl = document.getElementById('overlay');
+if(btnMenu){
+  btnMenu.addEventListener('click', ()=>{
+    document.getElementById('sidebar').classList.add('open');
+    overlayEl.classList.add('show');
+  });
+  overlayEl.addEventListener('click', ()=>{
+    document.getElementById('sidebar').classList.remove('open');
+    overlayEl.classList.remove('show');
+  });
+}
 
 function render(){
   setActiveNav();
@@ -379,8 +411,8 @@ function renderResumenPorFecha(){
       '<td style="text-align:right">'+r.mM+'</td><td style="text-align:right">'+r.mT+'</td></tr>';
   }).join('');
   const table = fechas.length ? '<div style="overflow-x:auto"><table style="min-width:820px"><tr>'+
-    '<th rowspan="2">Fecha</th><th colspan="2">Barrios</th><th colspan="2">Viviana</th><th colspan="2">Zeballos</th><th colspan="2">Total</th><th colspan="2">Miguel</th>'+
-    '</tr><tr><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th></tr>'+
+    '<th rowspan="2">Fecha</th><th colspan="2" style="text-align:center">Barrios</th><th colspan="2" style="text-align:center">Viviana</th><th colspan="2" style="text-align:center">Zeballos</th><th colspan="2" style="text-align:center">Total</th><th colspan="2" style="text-align:center">Miguel</th>'+
+    '</tr><tr><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th></tr>'+
     rows+'</table></div>' : '<div class="empty">Todavía no hay registros.</div>';
   const c = card('Registros por fecha', (fechas.length ? '<div style="margin-bottom:10px"><button class="btn-ghost" id="btn-exportar-leche">Exportar a Excel</button></div>' : '') + table);
   if(fechas.length){
@@ -477,6 +509,20 @@ function renderLiquidacion(main){
         (porPersona.length ? '<table><tr><th>Persona</th><th style="text-align:right">Litros</th><th style="text-align:right">Precio/L</th><th style="text-align:right">A liquidar</th></tr>'+rows+'</table>' : '<div class="empty">Sin registros en este periodo.</div>');
       resultsWrap.appendChild(card(grupo.nombre + ' · ' + miembros.map(m=>m.nombre).join(', '), html));
     });
+
+    // Resumen combinado de Barrios (participa en Grupo 1 y Grupo 2)
+    const barrios = state.personas.find(p=>p.id==='barrios');
+    if(barrios){
+      const regsBarrios = state.registros.filter(r=>r.persona_id==='barrios' && r.fecha>=start && r.fecha<=end);
+      const litrosG1 = regsBarrios.filter(r=>r.grupo_id==='g1').reduce((s,r)=>s+Number(r.litros),0);
+      const litrosG2 = regsBarrios.filter(r=>r.grupo_id==='g2').reduce((s,r)=>s+Number(r.litros),0);
+      const litrosTotalB = litrosG1 + litrosG2;
+      const pagoTotalB = litrosTotalB * barrios.precio;
+      const htmlB = '<div class="grid grid-3" style="margin-bottom:14px">'+
+        metric('Litros Grupo 1', fmtNum(litrosG1)+' L') + metric('Litros Grupo 2', fmtNum(litrosG2)+' L') + metric('Total a liquidar', fmtMoney(pagoTotalB), 'accent') + '</div>'+
+        '<p class="subtle">Litros totales del periodo: '+fmtNum(litrosTotalB)+' L a '+fmtMoney(barrios.precio)+'/L</p>';
+      resultsWrap.appendChild(card('Barrios · Liquidación combinada (Grupo 1 + Grupo 2)', htmlB));
+    }
   }
   document.getElementById('btn-calcular').addEventListener('click', calcular);
   calcular();
