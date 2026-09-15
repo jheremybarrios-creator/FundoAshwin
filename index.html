@@ -509,20 +509,6 @@ function renderLiquidacion(main){
         (porPersona.length ? '<table><tr><th>Persona</th><th style="text-align:right">Litros</th><th style="text-align:right">Precio/L</th><th style="text-align:right">A liquidar</th></tr>'+rows+'</table>' : '<div class="empty">Sin registros en este periodo.</div>');
       resultsWrap.appendChild(card(grupo.nombre + ' · ' + miembros.map(m=>m.nombre).join(', '), html));
     });
-
-    // Resumen combinado de Barrios (participa en Grupo 1 y Grupo 2)
-    const barrios = state.personas.find(p=>p.id==='barrios');
-    if(barrios){
-      const regsBarrios = state.registros.filter(r=>r.persona_id==='barrios' && r.fecha>=start && r.fecha<=end);
-      const litrosG1 = regsBarrios.filter(r=>r.grupo_id==='g1').reduce((s,r)=>s+Number(r.litros),0);
-      const litrosG2 = regsBarrios.filter(r=>r.grupo_id==='g2').reduce((s,r)=>s+Number(r.litros),0);
-      const litrosTotalB = litrosG1 + litrosG2;
-      const pagoTotalB = litrosTotalB * barrios.precio;
-      const htmlB = '<div class="grid grid-3" style="margin-bottom:14px">'+
-        metric('Litros Grupo 1', fmtNum(litrosG1)+' L') + metric('Litros Grupo 2', fmtNum(litrosG2)+' L') + metric('Total a liquidar', fmtMoney(pagoTotalB), 'accent') + '</div>'+
-        '<p class="subtle">Litros totales del periodo: '+fmtNum(litrosTotalB)+' L a '+fmtMoney(barrios.precio)+'/L</p>';
-      resultsWrap.appendChild(card('Barrios · Liquidación combinada (Grupo 1 + Grupo 2)', htmlB));
-    }
   }
   document.getElementById('btn-calcular').addEventListener('click', calcular);
   calcular();
