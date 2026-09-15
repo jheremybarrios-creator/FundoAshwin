@@ -1,10 +1,11 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fundo Ashwin</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root{
     --bg:#F5F1E8; --surface:#FFFFFF; --border:#DDD6C4; --ink:#2A2820; --muted:#756F5C;
@@ -354,6 +355,47 @@ function renderReportes(main){
   main.appendChild(card('Producción de leche por mes', lecheBars));
 }
 
+// ---------- Resumen de leche por fecha ----------
+function renderResumenPorFecha(){
+  const fechas = [...new Set(state.registros.filter(r=>r.grupo_id==='g1'||r.grupo_id==='g2').map(r=>r.fecha))].sort();
+  const litrosCelda = (fecha, personaId, grupoId, turno) => {
+    const r = state.registros.find(x=>x.fecha===fecha && x.persona_id===personaId && x.grupo_id===grupoId && x.turno===turno);
+    return r ? Number(r.litros) : 0;
+  };
+  const dataRows = fechas.map(fecha=>{
+    const bM = litrosCelda(fecha,'barrios','g1','Mañana'), bT = litrosCelda(fecha,'barrios','g1','Tarde');
+    const vM = litrosCelda(fecha,'viviana','g1','Mañana'), vT = litrosCelda(fecha,'viviana','g1','Tarde');
+    const zM = litrosCelda(fecha,'zeballos','g1','Mañana'), zT = litrosCelda(fecha,'zeballos','g1','Tarde');
+    const mM = litrosCelda(fecha,'miguel','g2','Mañana'), mT = litrosCelda(fecha,'miguel','g2','Tarde');
+    return {fecha, bM, bT, vM, vT, zM, zT, totM:bM+vM+zM, totT:bT+vT+zT, mM, mT};
+  });
+  const rows = dataRows.map(r=>{
+    const [y,m,d] = r.fecha.split('-');
+    return '<tr><td style="white-space:nowrap">'+d+'/'+m+'/'+y+'</td>'+
+      '<td style="text-align:right">'+r.bM+'</td><td style="text-align:right">'+r.bT+'</td>'+
+      '<td style="text-align:right">'+r.vM+'</td><td style="text-align:right">'+r.vT+'</td>'+
+      '<td style="text-align:right">'+r.zM+'</td><td style="text-align:right">'+r.zT+'</td>'+
+      '<td style="text-align:right;font-weight:600">'+r.totM+'</td><td style="text-align:right;font-weight:600">'+r.totT+'</td>'+
+      '<td style="text-align:right">'+r.mM+'</td><td style="text-align:right">'+r.mT+'</td></tr>';
+  }).join('');
+  const table = fechas.length ? '<div style="overflow-x:auto"><table style="min-width:820px"><tr>'+
+    '<th rowspan="2">Fecha</th><th colspan="2">Barrios</th><th colspan="2">Viviana</th><th colspan="2">Zeballos</th><th colspan="2">Total</th><th colspan="2">Miguel</th>'+
+    '</tr><tr><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th><th>Mañana</th><th>Tarde</th></tr>'+
+    rows+'</table></div>' : '<div class="empty">Todavía no hay registros.</div>';
+  const c = card('Registros por fecha', (fechas.length ? '<div style="margin-bottom:10px"><button class="btn-ghost" id="btn-exportar-leche">Exportar a Excel</button></div>' : '') + table);
+  if(fechas.length){
+    c.querySelector('#btn-exportar-leche').addEventListener('click', ()=>{
+      const header = ['Fecha','Barrios Mañana','Barrios Tarde','Viviana Mañana','Viviana Tarde','Zeballos Mañana','Zeballos Tarde','Total Mañana','Total Tarde','Miguel Mañana','Miguel Tarde'];
+      const aoa = [header, ...dataRows.map(r=>[r.fecha, r.bM, r.bT, r.vM, r.vT, r.zM, r.zT, r.totM, r.totT, r.mM, r.mT])];
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Leche diaria');
+      XLSX.writeFile(wb, 'leche-diaria-fundo-ashwin.xlsx');
+    });
+  }
+  return c;
+}
+
 // ---------- Registro diario ----------
 function renderRegistro(main){
   main.appendChild(titleBlock('Registro diario','Litros entregados por persona y turno'));
@@ -384,6 +426,8 @@ function renderRegistro(main){
       showToast('Registro guardado.'); render();
     });
   });
+  main.appendChild(renderResumenPorFecha());
+
   const recent = [...state.registros].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,15);
   const rows = recent.map(r=>{
     const p = state.personas.find(pp=>pp.id===r.persona_id);
