@@ -12,6 +12,7 @@
     --primary:#3D5A3D; --primary-dark:#2A3F2A; --primary-light:#E7EEDF;
     --accent:#C08A2E; --accent-light:#F5E9CF;
     --danger:#B23A2E; --danger-light:#F6E1DD; --success:#3D6B3D; --success-light:#E2ECDD;
+    --warn:#9A6B00; --warn-light:#FBF0D2;
     --radius:10px;
   }
   *{box-sizing:border-box}
@@ -19,68 +20,133 @@
   h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;margin:0}
   h1{font-size:22px}h2{font-size:18px}h3{font-size:15px}
   button{font-family:inherit;font-size:14px;cursor:pointer;border-radius:8px}
-  input,select{font-family:inherit;font-size:14px;border-radius:8px;border:1px solid var(--border);padding:8px 10px;background:#fff;color:var(--ink)}
+  input,select{font-family:inherit;font-size:16px;border-radius:8px;border:1px solid var(--border);padding:8px 10px;background:#fff;color:var(--ink)}
   input:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px}
   table{width:100%;border-collapse:collapse;font-size:13.5px}
   th{text-align:left;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--border)}
   td{padding:8px 8px;border-bottom:1px solid var(--border)}
+  .num{text-align:right;white-space:nowrap}
+  .table-wrap{overflow-x:auto}
   .app{display:flex;min-height:100vh}
-  .sidebar{width:230px;flex-shrink:0;background:var(--primary-dark);color:#fff;padding:1.25rem 1rem;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sidebar{width:230px;flex-shrink:0;background:var(--primary-dark);color:#fff;padding:1.25rem 1rem;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
   .sidebar .brand{font-family:Georgia,serif;font-size:19px;margin-bottom:2px}
-  .sidebar .brand-sub{font-size:11px;color:#C9D4C0;margin-bottom:22px}
-  .sidebar .group-label{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#9FB093;margin:18px 6px 6px}
+  .sidebar .brand-sub{font-size:11px;color:#C9D4C0;margin-bottom:14px}
+  .sidebar .group-label{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#9FB093;margin:16px 6px 6px}
   .navitem{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:9px 10px;background:transparent;color:#E7EEDF;border:none;border-radius:8px;margin-bottom:2px}
   .navitem:hover{background:rgba(255,255,255,0.08)}
   .navitem.active{background:var(--accent);color:#2A1F0A;font-weight:600}
-  .main{flex:1;min-width:0;padding:1.75rem 2rem;max-width:980px}
+  .navitem.easy{background:#fff;color:var(--primary-dark);font-weight:600;font-size:15px;padding:11px 12px}
+  .navitem.easy.active{background:var(--accent);color:#2A1F0A}
+  .sidebar-foot{margin-top:auto;padding-top:18px;font-size:12px;color:#C9D4C0}
+  .sidebar-foot button{margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:6px 10px;font-size:12.5px}
+  .main{flex:1;min-width:0;padding:1.75rem 2rem;max-width:1020px}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem;margin-bottom:1.1rem}
   .grid{display:grid;gap:12px}
   .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
   .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-  @media (max-width:700px){.grid-3,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  @media (max-width:700px){.grid-3,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-5{grid-template-columns:repeat(3,minmax(0,1fr))}}
   .mobile-topbar{display:none}
   .overlay{display:none}
   @media (max-width:700px){
     .mobile-topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--primary-dark);color:#fff;position:sticky;top:0;z-index:40}
-    .mobile-topbar button{background:transparent;border:none;color:#fff;font-size:22px;line-height:1;padding:2px 6px}
+    .mobile-topbar button{background:transparent;border:none;color:#fff;font-size:24px;line-height:1;padding:2px 6px}
     .mobile-topbar .brand{font-family:Georgia,serif;font-size:17px}
-    .sidebar{position:fixed;left:0;top:0;height:100vh;width:230px;transform:translateX(-100%);transition:transform .25s ease;z-index:50}
+    .sidebar{position:fixed;left:0;top:0;height:100vh;width:240px;transform:translateX(-100%);transition:transform .25s ease;z-index:50}
     .sidebar.open{transform:translateX(0)}
     .main{padding:1rem}
+    .card{padding:1rem}
     .overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:45}
   }
+  body.locked .sidebar, body.locked .mobile-topbar{display:none}
   .metric{background:var(--primary-light);border-radius:var(--radius);padding:0.85rem 1rem}
   .metric .label{font-size:12px;color:var(--muted);margin-bottom:4px}
   .metric .value{font-size:20px;font-weight:600;color:var(--primary-dark)}
-  .metric.accent{background:var(--accent-light)}
-  .metric.accent .value{color:#7A5A1E}
-  .metric.success{background:var(--success-light)}
-  .metric.success .value{color:var(--success)}
+  .metric .hint{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .metric.accent{background:var(--accent-light)} .metric.accent .value{color:#7A5A1E}
+  .metric.success{background:var(--success-light)} .metric.success .value{color:var(--success)}
+  .metric.danger{background:var(--danger-light)} .metric.danger .value{color:var(--danger)}
+  .metric.warn{background:var(--warn-light)} .metric.warn .value{color:var(--warn)}
   .btn-primary{background:var(--primary);color:#fff;border:none;padding:9px 16px}
   .btn-primary:hover{background:var(--primary-dark)}
   .btn-ghost{background:transparent;border:1px solid var(--border);padding:8px 12px;color:var(--ink)}
   .btn-danger{background:transparent;border:none;color:var(--danger);padding:4px 8px;font-size:13px}
+  .btn-link{background:none;border:none;color:var(--primary);padding:0;font-size:14px;text-decoration:underline}
   .form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:0.9rem}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:12px;color:var(--muted)}
   .field input,.field select{min-width:130px}
   .empty{color:var(--muted);font-size:13.5px;padding:1rem 0;text-align:center}
   .badge{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary-dark)}
+  .badge.red{background:var(--danger-light);color:var(--danger)}
+  .badge.green{background:var(--success-light);color:var(--success)}
+  .badge.yellow{background:var(--warn-light);color:var(--warn)}
   .subtle{color:var(--muted);font-size:13px}
-  .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .toast{position:fixed;bottom:16px;right:16px;background:var(--primary-dark);color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:50}
+  .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+  .toast{position:fixed;bottom:16px;right:16px;left:16px;margin:0 auto;max-width:420px;text-align:center;background:var(--primary-dark);color:#fff;padding:12px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:80}
   .toast.show{opacity:1}
-  .config-banner{background:#FCEBEB;border:1px solid #F0999A;color:#791F1F;padding:14px 18px;border-radius:10px;margin:20px;font-size:13.5px}
+  .banner{background:#FCEBEB;border:1px solid #F0999A;color:#791F1F;padding:14px 18px;border-radius:10px;margin-bottom:16px;font-size:13.5px}
+  .banner.info{background:var(--warn-light);border-color:#E5C77A;color:#5E4300}
+  .alert-list{list-style:none;padding:0;margin:0}
+  .alert-list li{padding:9px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+  .alert-list li:last-child{border-bottom:none}
+  .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px}
+  .dot.red{background:var(--danger)} .dot.yellow{background:var(--accent)} .dot.green{background:var(--success)}
+  /* parcelas */
+  .ha-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  @media (max-width:520px){.ha-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .ha-tile{border:2px solid var(--border);border-radius:10px;padding:10px 8px;background:#FAF8F2;text-align:center;cursor:pointer;min-height:84px}
+  .ha-tile:hover{border-color:var(--primary)}
+  .ha-tile .n{font-weight:700;font-size:15px}
+  .ha-tile .c{font-size:12.5px;margin-top:2px}
+  .ha-tile .e{font-size:11px;color:var(--muted)}
+  .ha-tile.sembrado{background:#EEF4E6;border-color:#B9CDA5}
+  .ha-tile.crecimiento{background:#DCEACB;border-color:#8FB06F}
+  .ha-tile.cosecha{background:var(--accent-light);border-color:var(--accent)}
+  .ha-tile.sel{outline:3px solid var(--primary)}
+  .crumbs{font-size:13px;margin-bottom:10px}
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:90;padding:16px}
+  .modal{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:24px}
+  .modal p{font-size:18px;margin:0 0 20px}
+  .modal .acts{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+  .modal .acts button{font-size:17px;padding:12px 20px;border-radius:10px}
+  /* modo fácil */
+  .easy-wrap{max-width:560px;margin:0 auto}
+  .easy-step{font-size:15px;color:var(--muted);margin-bottom:4px}
+  .easy-q{font-size:27px;font-family:Georgia,serif;margin:2px 0 18px;line-height:1.25}
+  .big-btn{display:flex;align-items:center;gap:16px;width:100%;min-height:78px;font-size:22px;padding:14px 20px;border-radius:14px;border:2px solid var(--border);background:#fff;color:var(--ink);margin-bottom:12px;text-align:left}
+  .big-btn:active{transform:scale(0.98)}
+  .big-btn .ico{font-size:34px;line-height:1}
+  .big-btn small{display:block;font-size:15px;color:var(--muted)}
+  .big-btn.primary{background:var(--primary);color:#fff;border-color:var(--primary);justify-content:center}
+  .big-btn.primary small{color:#DDE8D4}
+  .big-btn.sel{border-color:var(--primary);background:var(--primary-light);border-width:3px}
+  .big-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .num-input{font-size:44px;text-align:center;width:100%;padding:14px;border:3px solid var(--primary);border-radius:14px;font-weight:700}
+  .num-input::-webkit-outer-spin-button,.num-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} .num-input{-moz-appearance:textfield}
+  .stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 18px}
+  .stepper button{font-size:22px;padding:14px 0;border-radius:12px;border:2px solid var(--border);background:#fff;font-weight:600}
+  .easy-back{background:none;border:none;color:var(--primary);font-size:18px;padding:6px 0;margin-bottom:10px}
+  .easy-summary{background:var(--primary-light);border-radius:14px;padding:18px 20px;font-size:21px;margin-bottom:18px;line-height:1.6}
+  .easy-ok{text-align:center;padding:30px 10px}
+  .easy-ok .ico{font-size:80px}
+  .easy-ok h2{font-size:28px;margin:10px 0 20px}
+  /* login */
+  .login-wrap{max-width:380px;margin:10vh auto;padding:0 16px}
+  .login-wrap .field input{width:100%;font-size:17px;padding:12px}
+  .login-wrap .field{margin-bottom:14px}
+  .login-wrap button{width:100%;font-size:17px;padding:13px}
 </style>
 </head>
-<body>
+<body class="locked">
 
 <!-- ======================================================================
-  CONFIGURACIÓN: pega aquí los datos de tu proyecto de Supabase.
-  Los encuentras en: Supabase -> tu proyecto -> Settings -> API
-  SUPABASE_URL  = "Project URL"
-  SUPABASE_KEY  = "anon public" key
+  CONFIGURACIÓN: datos de tu proyecto de Supabase (Settings -> API).
+  La clave "publishable/anon" puede estar aquí. La seguridad la dan el
+  inicio de sesión y las reglas RLS del archivo supabase-cambios.sql.
+  NUNCA pongas aquí la clave "service_role" / "secret".
 ======================================================================= -->
 <script>
   const SUPABASE_URL = "https://aqgyevvcehocrpyuwdwd.supabase.co";
@@ -96,59 +162,116 @@
   <nav class="sidebar" id="sidebar">
     <div class="brand">Fundo Ashwin</div>
     <div class="brand-sub">Gestión del negocio</div>
-    <div class="group-label">Gestión agrícola</div>
+    <button class="navitem easy" data-screen="facil"><span>👴 Modo fácil</span></button>
+    <div class="group-label">Negocio</div>
     <button class="navitem" data-screen="dashboard"><span>Panel general</span></button>
-    <button class="navitem" data-screen="parcelas"><span>Parcelas</span></button>
-    <button class="navitem" data-screen="siembras"><span>Siembras</span></button>
+    <button class="navitem" data-screen="inversion"><span>Inversión y ganancia</span></button>
+    <button class="navitem" data-screen="indicadores"><span>Indicadores (KPI)</span></button>
+    <div class="group-label">Gestión agrícola</div>
+    <button class="navitem" data-screen="parcelas"><span>Parcelas y hectáreas</span></button>
     <button class="navitem" data-screen="ganado"><span>Ganado</span></button>
     <button class="navitem" data-screen="movimientos"><span>Costos e ingresos</span></button>
     <button class="navitem" data-screen="reportes"><span>Reportes</span></button>
     <div class="group-label">Control de leche</div>
     <button class="navitem" data-screen="registro"><span>Registro diario</span></button>
     <button class="navitem" data-screen="liquidacion"><span>Liquidación quincenal</span></button>
+    <div class="sidebar-foot">
+      <div id="user-email"></div>
+      <button id="btn-logout">Cerrar sesión</button>
+    </div>
   </nav>
   <main class="main" id="main"></main>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
+// Si se llega desde un correo de invitación o de "olvidé mi contraseña", hay que crear contraseña
+const LINK_TIPO = (location.hash.match(/type=(invite|recovery|signup)/)||[])[1] || null;
 let sb = null;
 if(SUPABASE_URL.startsWith('http') && SUPABASE_KEY.length > 10){
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
+// =====================================================================
+// Utilidades
+// =====================================================================
 function showToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2200);
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>t.classList.remove('show'), 2600);
 }
-function fmtMoney(n){ return 'S/ ' + (Math.round(n*100)/100).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function fmtNum(n){ return Math.round(n*100)/100; }
-function todayISO(){ return new Date().toISOString().slice(0,10); }
+function fmtMoney(n){ n = Number(n)||0; return (n<0?'-':'')+'S/ ' + Math.abs(Math.round(n*100)/100).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtNum(n){ return (Math.round((Number(n)||0)*100)/100).toLocaleString('es-PE'); }
+function fmtPct(n){ return (isFinite(n) ? (Math.round(n*10)/10).toLocaleString('es-PE') : '—') + ' %'; }
+// Fecha LOCAL del dispositivo (hora de Perú), no UTC.
+function localISO(d){ const z = new Date(d.getTime() - d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); }
+function todayISO(){ return localISO(new Date()); }
+function addDays(iso, n){ const [y,m,d] = iso.split('-').map(Number); return localISO(new Date(y, m-1, d+n)); }
+function daysBetween(a, b){ const [y1,m1,d1]=a.split('-').map(Number), [y2,m2,d2]=b.split('-').map(Number); return Math.round((new Date(y2,m2-1,d2) - new Date(y1,m1-1,d1))/86400000); }
+function fmtDate(iso){ if(!iso) return '—'; const [y,m,d] = iso.split('-'); return d+'/'+m+'/'+y; }
+const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','set','oct','nov','dic'];
+function fmtYM(ym){ const [y,m] = ym.split('-'); return MESES[Number(m)-1]+' '+y; }
+function monthBounds(ym){ const [y,m] = ym.split('-').map(Number); const last = new Date(y, m, 0).getDate(); return [ym+'-01', ym+'-'+String(last).padStart(2,'0')]; }
+function monthsRange(fromYM, toYM){ const out=[]; let [y,m]=fromYM.split('-').map(Number); const [y2,m2]=toYM.split('-').map(Number); while(y<y2 || (y===y2 && m<=m2)){ out.push(y+'-'+String(m).padStart(2,'0')); m++; if(m>12){m=1;y++;} } return out; }
+function turnoActual(){ return new Date().getHours() < 12 ? 'Mañana' : 'Tarde'; }
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function sum(arr, f){ return arr.reduce((s,x)=>s+(Number(f(x))||0),0); }
 
-// ---------- state ----------
-let state = { parcelas: [], siembras: [], ganado: [], movimientos: [], personas: [], grupos: [], registros: [] };
-const CATEGORIAS_GANADERIA = ['Luz','Agua','Alimentación','Vitaminas','Medicinas','Otro'];
-const CATEGORIAS_AGRICOLA = ['Semillas','Riego','Mano de obra','Fertilizante','Maquinaria','Otro'];
+// Ventana de confirmación grande (para borrar o reemplazar)
+function askConfirm(msg, okText, danger){
+  return new Promise(resolve=>{
+    const bg = document.createElement('div'); bg.className='modal-bg';
+    bg.innerHTML = '<div class="modal"><p>'+msg+'</p><div class="acts">'+
+      '<button class="btn-ghost" data-r="0">Cancelar</button>'+
+      '<button class="btn-primary" data-r="1" style="'+(danger?'background:var(--danger)':'')+'">'+(okText||'Sí')+'</button></div></div>';
+    document.body.appendChild(bg);
+    bg.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click', ()=>{ bg.remove(); resolve(b.getAttribute('data-r')==='1'); }));
+  });
+}
+
+// =====================================================================
+// Datos
+// =====================================================================
+let state = { parcelas:[], siembras:[], ganado:[], movimientos:[], personas:[], grupos:[], registros:[], hectareas:[], labores:[], inversiones:[] };
+let faltanTablas = [];
+const CATEGORIAS = {
+  agricola: { costo:['Semillas','Riego','Mano de obra','Fertilizante','Fumigación','Maquinaria','Transporte','Otro'], ingreso:['Venta de cosecha','Otro'] },
+  ganaderia:{ costo:['Alimentación','Luz','Agua','Vitaminas','Medicinas','Veterinario','Mano de obra','Otro'], ingreso:['Venta de animal','Otro'] }
+};
+const TIPOS_LABOR = ['Preparación de suelo','Siembra','Riego','Fertilización','Fumigación','Deshierbo','Cosecha','Otro'];
+const ICONO_LABOR = {'Preparación de suelo':'🚜','Siembra':'🌱','Riego':'💧','Fertilización':'🧪','Fumigación':'🧴','Deshierbo':'🌿','Cosecha':'🌾','Otro':'📝'};
+const CATEG_LABOR = {'Preparación de suelo':'Maquinaria','Siembra':'Semillas','Riego':'Riego','Fertilización':'Fertilizante','Fumigación':'Fumigación','Deshierbo':'Mano de obra','Cosecha':'Mano de obra','Otro':'Otro'};
+const UNIDADES = ['kg','sacos','litros','horas','jornales','m³','unidades'];
+const CATEG_INVERSION = ['Terreno','Ganado (compra de animales)','Maquinaria y equipo','Infraestructura (establo, cercos, riego)','Instalación de cultivos','Capital de trabajo','Otro'];
 
 async function fetchAll(){
-  const [p, s, g, m, per, gr, r] = await Promise.all([
-    sb.from('parcelas').select('*').order('created_at'),
-    sb.from('siembras').select('*').order('created_at'),
-    sb.from('ganado').select('*').order('created_at'),
-    sb.from('movimientos').select('*').order('fecha', {ascending:false}),
-    sb.from('personas').select('*'),
-    sb.from('grupos').select('*'),
-    sb.from('registros').select('*').order('fecha', {ascending:false})
-  ]);
-  state.parcelas = p.data || []; state.siembras = s.data || []; state.ganado = g.data || [];
-  state.movimientos = m.data || []; state.personas = per.data || []; state.grupos = gr.data || [];
-  state.registros = r.data || [];
+  const tablas = [
+    ['parcelas','created_at',true], ['siembras','created_at',true], ['ganado','created_at',true],
+    ['movimientos','fecha',false], ['personas',null], ['grupos',null], ['registros','fecha',false],
+    ['hectareas','numero',true], ['labores','fecha',false], ['inversiones','fecha',false]
+  ];
+  faltanTablas = [];
+  const res = await Promise.all(tablas.map(([t,ord,asc])=>{
+    let q = sb.from(t).select('*');
+    if(ord) q = q.order(ord, {ascending:!!asc});
+    return q;
+  }));
+  res.forEach((r,i)=>{
+    const t = tablas[i][0];
+    if(r.error){ faltanTablas.push(t); state[t] = []; }
+    else state[t] = r.data || [];
+  });
 }
-
 async function insertRow(table, row){
   const { data, error } = await sb.from(table).insert(row).select().single();
   if(error){ showToast('No se pudo guardar: ' + error.message); return null; }
+  return data;
+}
+async function updateRow(table, id, patch){
+  const { data, error } = await sb.from(table).update(patch).eq('id', id).select().single();
+  if(error){ showToast('No se pudo actualizar: ' + error.message); return null; }
   return data;
 }
 async function deleteRow(table, id){
@@ -156,222 +279,665 @@ async function deleteRow(table, id){
   if(error){ showToast('No se pudo eliminar: ' + error.message); return false; }
   return true;
 }
+function replaceInState(table, row){ const i = state[table].findIndex(x=>x.id===row.id); if(i>=0) state[table][i]=row; else state[table].push(row); }
 
-// ---------- nav ----------
-let currentScreen = 'dashboard';
-function setActiveNav(){
-  document.querySelectorAll('.navitem').forEach(b=>{
-    b.classList.toggle('active', b.getAttribute('data-screen') === currentScreen);
+// =====================================================================
+// Cálculos del negocio
+// =====================================================================
+function persona(id){ return state.personas.find(p=>p.id===id); }
+function esPropia(pid){ const p = persona(pid); return !!(p && p.propia); }
+function regsIn(start, end){ return state.registros.filter(r=>r.fecha>=start && r.fecha<=end); }
+function movsIn(start, end, area){ return state.movimientos.filter(m=>m.fecha>=start && m.fecha<=end && (!area || m.area===area)); }
+
+// Leche: lo que vale para el negocio = venta al comprador SIN IGV (el IGV es de SUNAT)
+// menos lo que se paga a proveedores externos. La leche de personas "propias" no se paga.
+function lecheNeta(start, end){
+  let litros=0, venta=0, pagos=0, litrosPropios=0;
+  state.grupos.forEach(g=>{
+    regsIn(start,end).filter(r=>r.grupo_id===g.id).forEach(r=>{
+      const l = Number(r.litros)||0;
+      litros += l; venta += l*Number(g.precio_venta_base||0);
+      if(esPropia(r.persona_id)) litrosPropios += l;
+      else { const p = persona(r.persona_id); pagos += l*Number(p?p.precio:0); }
+    });
   });
+  return {litros, venta, pagos, neto: venta-pagos, litrosPropios};
+}
+function resultadoPeriodo(start, end, area){
+  const movs = movsIn(start, end, area);
+  const ingresos = sum(movs.filter(m=>m.tipo==='ingreso'), m=>m.monto);
+  const costos = sum(movs.filter(m=>m.tipo==='costo'), m=>m.monto);
+  const leche = (!area || area==='ganaderia') ? lecheNeta(start, end) : {neto:0, venta:0, pagos:0, litros:0, litrosPropios:0};
+  return {ingresos, costos, leche, ganancia: ingresos - costos + leche.neto};
+}
+function primerMes(){
+  const fechas = [...state.inversiones.map(x=>x.fecha), ...state.movimientos.map(x=>x.fecha), ...state.registros.map(x=>x.fecha)].filter(Boolean).sort();
+  return (fechas[0] || todayISO()).slice(0,7);
+}
+function siembraActiva(hid){ return state.siembras.find(s=>s.hectarea_id===hid && s.estado!=='Cosechado'); }
+function laboresDe(hid){ return state.labores.filter(l=>l.hectarea_id===hid).sort((a,b)=>b.fecha.localeCompare(a.fecha)); }
+// Fecha del último trabajo o de la siembra activa (lo más reciente)
+function ultimaActividad(hid){ const l = laboresDe(hid)[0], s = siembraActiva(hid); return [l&&l.fecha, s&&s.fecha_siembra].filter(Boolean).sort().pop() || null; }
+function hectareasDe(pid){ return state.hectareas.filter(h=>h.parcela_id===pid).sort((a,b)=>a.numero-b.numero); }
+function lecheDiaria(start, end){ const m={}; regsIn(start,end).forEach(r=>{ m[r.fecha]=(m[r.fecha]||0)+Number(r.litros); }); return m; }
+function diasSinRegistro(n){
+  if(!state.registros.length) return [];
+  const primero = state.registros.map(r=>r.fecha).sort()[0];
+  const hoy = todayISO(); let ini = addDays(hoy, -(n-1)); if(primero>ini) ini = primero;
+  const con = new Set(state.registros.map(r=>r.fecha)); const out=[];
+  for(let d=ini; d<hoy; d=addDays(d,1)) if(!con.has(d)) out.push(d); // hoy no cuenta: aún se puede registrar
+  return out;
+}
+
+// =====================================================================
+// Navegación
+// =====================================================================
+let nav = { screen:'dashboard', parcelaId:null, hectareaId:null };
+function go(screen, extra){
+  nav = Object.assign({screen, parcelaId:null, hectareaId:null}, extra||{});
+  render(); window.scrollTo(0,0);
+}
+function setActiveNav(){
+  document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active', b.getAttribute('data-screen')===nav.screen));
 }
 document.querySelectorAll('.navitem').forEach(b=>{
   b.addEventListener('click', ()=>{
-    currentScreen = b.getAttribute('data-screen'); render();
+    const s = b.getAttribute('data-screen');
+    if(s==='facil') easy = {flow:null, step:0, d:{}};
+    go(s);
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('overlay').classList.remove('show');
   });
 });
-const btnMenu = document.getElementById('btn-menu');
 const overlayEl = document.getElementById('overlay');
-if(btnMenu){
-  btnMenu.addEventListener('click', ()=>{
-    document.getElementById('sidebar').classList.add('open');
-    overlayEl.classList.add('show');
-  });
-  overlayEl.addEventListener('click', ()=>{
-    document.getElementById('sidebar').classList.remove('open');
-    overlayEl.classList.remove('show');
-  });
-}
+document.getElementById('btn-menu').addEventListener('click', ()=>{ document.getElementById('sidebar').classList.add('open'); overlayEl.classList.add('show'); });
+overlayEl.addEventListener('click', ()=>{ document.getElementById('sidebar').classList.remove('open'); overlayEl.classList.remove('show'); });
 
 function render(){
   setActiveNav();
   const main = document.getElementById('main');
   main.innerHTML = '';
-  const renderers = {
-    dashboard: renderDashboard, parcelas: renderParcelas, siembras: renderSiembras,
-    ganado: renderGanado, movimientos: renderMovimientos, reportes: renderReportes,
-    registro: renderRegistro, liquidacion: renderLiquidacion
-  };
-  (renderers[currentScreen] || renderDashboard)(main);
+  if(faltanTablas.length){
+    const b = document.createElement('div'); b.className='banner';
+    b.innerHTML = '<b>Faltan tablas en la base de datos:</b> '+faltanTablas.join(', ')+'. Ejecuta el archivo <code>supabase-cambios.sql</code> en Supabase → SQL Editor. Mientras tanto, esas partes no guardarán datos.';
+    main.appendChild(b);
+  }
+  const renderers = { facil:renderFacil, dashboard:renderDashboard, inversion:renderInversion, indicadores:renderIndicadores,
+    parcelas:renderParcelas, ganado:renderGanado, movimientos:renderMovimientos, reportes:renderReportes,
+    registro:renderRegistro, liquidacion:renderLiquidacion };
+  (renderers[nav.screen] || renderDashboard)(main);
 }
-function card(title, innerHTML){
+function card(title, innerHTML, right){
   const d = document.createElement('div'); d.className='card';
-  d.innerHTML = (title ? '<div class="section-title"><h2>'+title+'</h2></div>' : '') + innerHTML;
+  d.innerHTML = (title ? '<div class="section-title"><h2>'+title+'</h2>'+(right||'')+'</div>' : '') + innerHTML;
   return d;
 }
 function titleBlock(title, sub){
   const d = document.createElement('div');
-  d.innerHTML = '<h1 style="margin-bottom:2px">'+title+'</h1><p class="subtle" style="margin-bottom:18px">'+sub+'</p>';
+  d.innerHTML = '<h1 style="margin-bottom:2px">'+title+'</h1><p class="subtle" style="margin:0 0 18px">'+sub+'</p>';
   return d;
 }
-function field(id,label,type,placeholder){
-  return '<div class="field"><label for="'+id+'">'+label+'</label><input id="'+id+'" type="'+type+'" placeholder="'+(placeholder||'')+'" '+(type==='date'&&placeholder?('value="'+placeholder+'"'):'')+'></div>';
+function field(id, label, type, placeholder, value){
+  return '<div class="field"><label for="'+id+'">'+label+'</label><input id="'+id+'" type="'+type+'"'+(type==='number'?' inputmode="decimal" step="any"':'')+' placeholder="'+esc(placeholder||'')+'"'+(value!=null?' value="'+esc(value)+'"':'')+'></div>';
 }
-function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
-function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function metric(label, value, tone){
-  const cls = tone==='accent'?'metric accent':tone==='success'?'metric success':'metric';
-  return '<div class="'+cls+'"><div class="label">'+label+'</div><div class="value">'+value+'</div></div>';
+function selectField(id, label, options, selected){
+  return '<div class="field"><label for="'+id+'">'+label+'</label><select id="'+id+'">'+options.map(o=>{
+    const v = typeof o==='object'? o.v : o, t = typeof o==='object'? o.t : o;
+    return '<option value="'+esc(v)+'"'+(String(v)===String(selected)?' selected':'')+'>'+esc(t)+'</option>';
+  }).join('')+'</select></div>';
+}
+function metric(label, value, tone, hint){
+  return '<div class="metric'+(tone?' '+tone:'')+'"><div class="label">'+label+'</div><div class="value">'+value+'</div>'+(hint?'<div class="hint">'+hint+'</div>':'')+'</div>';
+}
+function bindDelete(container, table, onDone, msgFn){
+  container.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-del');
+    const ok = await askConfirm(msgFn ? msgFn(id) : '¿Seguro que quieres eliminar este registro? No se puede deshacer.', 'Sí, eliminar', true);
+    if(!ok) return;
+    if(await deleteRow(table, id)){ state[table] = state[table].filter(x=>String(x.id)!==String(id)); if(onDone) await onDone(id); showToast('Eliminado.'); render(); }
+  }));
 }
 
-// ---------- Dashboard ----------
+// =====================================================================
+// Panel general
+// =====================================================================
 function renderDashboard(main){
-  const thisMonth = todayISO().slice(0,7);
-  const costosMes = state.movimientos.filter(m=>m.tipo==='costo' && m.fecha.slice(0,7)===thisMonth).reduce((s,m)=>s+Number(m.monto),0);
-  const ingresosMes = state.movimientos.filter(m=>m.tipo==='ingreso' && m.fecha.slice(0,7)===thisMonth).reduce((s,m)=>s+Number(m.monto),0);
-  const lecheHoy = state.registros.filter(r=>r.fecha===todayISO()).reduce((s,r)=>s+Number(r.litros),0);
-  main.appendChild(titleBlock('Panel general','Resumen de Fundo Ashwin'));
+  const hoy = todayISO(), ym = hoy.slice(0,7);
+  const [mIni] = monthBounds(ym);
+  const mes = resultadoPeriodo(mIni, hoy);
+  const lecheHoy = sum(state.registros.filter(r=>r.fecha===hoy), r=>r.litros);
+  const sem = sum(regsIn(addDays(hoy,-6), hoy), r=>r.litros), semAnt = sum(regsIn(addDays(hoy,-13), addDays(hoy,-7)), r=>r.litros);
+  const varSem = semAnt>0 ? (sem-semAnt)/semAnt*100 : NaN;
+  main.appendChild(titleBlock('Panel general','Resumen de Fundo Ashwin al '+fmtDate(hoy)));
+
+  const easyCard = card('', '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h2>¿Vas a anotar algo rápido?</h2><p class="subtle" style="margin:4px 0 0">El modo fácil tiene botones grandes, paso a paso.</p></div><button class="btn-primary" id="go-easy" style="font-size:17px;padding:12px 20px">👴 Abrir modo fácil</button></div>');
+  main.appendChild(easyCard);
+  easyCard.querySelector('#go-easy').addEventListener('click', ()=>{ easy={flow:null,step:0,d:{}}; go('facil'); });
+
   main.appendChild(card('', '<div class="grid grid-4">'+
-    metric('Parcelas activas', state.parcelas.length) + metric('Ganado registrado', state.ganado.length) +
-    metric('Leche hoy', fmtNum(lecheHoy)+' L', 'accent') + metric('Costos del mes', fmtMoney(costosMes)) + '</div>'));
-  main.appendChild(card('', '<div class="grid grid-2">'+
-    metric('Ingresos del mes', fmtMoney(ingresosMes), 'success') +
-    metric('Balance del mes', fmtMoney(ingresosMes-costosMes), (ingresosMes-costosMes>=0?'success':'')) + '</div>'));
+    metric('Leche hoy', fmtNum(lecheHoy)+' L', 'accent') +
+    metric('Leche últimos 7 días', fmtNum(sem)+' L', isNaN(varSem)?'':(varSem>=0?'success':(varSem<-5?'danger':'warn')), isNaN(varSem)?'Sin semana anterior para comparar':(varSem>=0?'▲ ':'▼ ')+fmtPct(Math.abs(varSem))+' vs semana anterior') +
+    metric('Hectáreas registradas', state.hectareas.length, '', state.parcelas.length+' parcelas') +
+    metric('Animales activos', state.ganado.filter(g=>g.estado==='Activo').length, '', state.ganado.length+' en total') + '</div>'));
+  main.appendChild(card('Este mes ('+fmtYM(ym)+')', '<div class="grid grid-4">'+
+    metric('Ingresos', fmtMoney(mes.ingresos), 'success') +
+    metric('Leche (neto)', fmtMoney(mes.leche.neto), 'accent', 'Venta sin IGV − pagos a proveedores') +
+    metric('Costos', fmtMoney(mes.costos), 'danger') +
+    metric('Ganancia del mes', fmtMoney(mes.ganancia), mes.ganancia>=0?'success':'danger') + '</div>'));
+
+  // Alertas
+  const alertas = [];
+  const sinReg = diasSinRegistro(30);
+  if(sinReg.length) alertas.push(['red', 'Hay <b>'+sinReg.length+' día(s)</b> sin registro de leche en el último mes (último: '+fmtDate(sinReg[sinReg.length-1])+'). Un día sin registrar es dinero que no se puede liquidar bien.']);
+  const pendHoy = [];
+  state.grupos.forEach(g=>(g.miembro_ids||[]).forEach(pid=>{ if(!state.registros.some(r=>r.fecha===hoy && r.grupo_id===g.id && r.persona_id===pid)){ const p=persona(pid); if(p) pendHoy.push(p.nombre+' ('+g.nombre+')'); } }));
+  if(pendHoy.length) alertas.push(['yellow', 'Falta registrar la leche de hoy de: '+pendHoy.map(esc).join(', ')+'.']);
+  state.siembras.filter(s=>s.estado!=='Cosechado' && s.fecha_cosecha).forEach(s=>{
+    const dd = daysBetween(hoy, s.fecha_cosecha);
+    const h = state.hectareas.find(x=>x.id===s.hectarea_id), p = state.parcelas.find(x=>x.id===s.parcela_id);
+    const lugar = (p?p.nombre:'')+(h?' · Hectárea '+h.numero:'');
+    if(dd<0) alertas.push(['red', 'La cosecha de <b>'+esc(s.cultivo)+'</b> en '+esc(lugar)+' estaba prevista para el '+fmtDate(s.fecha_cosecha)+' ('+(-dd)+' días de retraso).']);
+    else if(dd<=15) alertas.push(['yellow', 'Cosecha de <b>'+esc(s.cultivo)+'</b> en '+esc(lugar)+' en '+dd+' día(s) ('+fmtDate(s.fecha_cosecha)+').']);
+  });
+  state.hectareas.forEach(h=>{
+    if(!siembraActiva(h.id)) return;
+    const ref = ultimaActividad(h.id);
+    const dias = ref ? daysBetween(ref, hoy) : null;
+    if(dias===null || dias>=15){ const p = state.parcelas.find(x=>x.id===h.parcela_id); alertas.push(['yellow', esc(p?p.nombre:'')+' · Hectárea '+h.numero+': '+(dias===null?'tiene cultivo pero ningún trabajo anotado':'sin trabajos anotados hace '+dias+' días')+'.']); }
+  });
+  const html = alertas.length ? '<ul class="alert-list">'+alertas.map(a=>'<li><span class="dot '+a[0]+'"></span><span>'+a[1]+'</span></li>').join('')+'</ul>'
+    : '<ul class="alert-list"><li><span class="dot green"></span><span>Todo al día. No hay alertas.</span></li></ul>';
+  main.appendChild(card('Alertas', html));
 }
 
-// ---------- Parcelas ----------
+// =====================================================================
+// Inversión y ganancia
+// =====================================================================
+function renderInversion(main){
+  main.appendChild(titleBlock('Inversión y ganancia','Cuánto pusimos en el fundo, cuánto está dejando y cuándo se recupera'));
+  const hoy = todayISO(), ymHoy = hoy.slice(0,7);
+  const invTotal = sum(state.inversiones, x=>x.monto);
+  const meses = monthsRange(primerMes(), ymHoy);
+  const porMes = meses.map(ym=>{ const [a,b]=monthBounds(ym); return Object.assign({ym}, resultadoPeriodo(a, b>hoy?hoy:b)); });
+  const acum = sum(porMes, x=>x.ganancia);
+  // Promedio mensual: meses ya cerrados (hasta 3). Si no hay, el mes actual.
+  const cerrados = porMes.filter(x=>x.ym<ymHoy).slice(-3);
+  const base = cerrados.length ? cerrados : porMes.slice(-1);
+  const prom = base.length ? sum(base, x=>x.ganancia)/base.length : 0;
+  const recuperado = invTotal>0 ? acum/invTotal*100 : NaN;
+  const roiMes = invTotal>0 ? prom/invTotal*100 : NaN;
+  let tiempo = '—', tiempoTone = '';
+  if(invTotal>0){
+    if(acum>=invTotal){ tiempo='¡Ya recuperada!'; tiempoTone='success'; }
+    else if(prom>0){ const m = Math.ceil((invTotal-acum)/prom); tiempo = m>=24 ? (Math.round(m/12*10)/10)+' años' : m+(m===1?' mes':' meses'); tiempoTone = m<=24?'success':(m<=60?'warn':'danger'); }
+    else { tiempo='No se recupera al ritmo actual'; tiempoTone='danger'; }
+  }
+  main.appendChild(card('', '<div class="grid grid-3">'+
+    metric('Inversión total', fmtMoney(invTotal), 'accent', state.inversiones.length+' aportes registrados') +
+    metric('Ganancia acumulada', fmtMoney(acum), acum>=0?'success':'danger', 'Desde '+fmtYM(meses[0])) +
+    metric('Inversión recuperada', fmtPct(recuperado), isNaN(recuperado)?'':(recuperado>=100?'success':'warn')) +
+    metric('Ganancia promedio por mes', fmtMoney(prom), prom>=0?'success':'danger', (cerrados.length?'Últimos '+base.length+' mes(es) cerrados':'Solo mes actual (incompleto)')) +
+    metric('Rentabilidad mensual', fmtPct(roiMes), isNaN(roiMes)?'':(roiMes>=2?'success':(roiMes>0?'warn':'danger')), 'Ganancia del mes ÷ inversión') +
+    metric('Tiempo para recuperar', tiempo, tiempoTone, 'Con la ganancia promedio actual') + '</div>'+
+    '<p class="subtle" style="margin:14px 0 0">La <b>ganancia</b> = ingresos − costos + leche neta. La leche se cuenta <b>sin IGV</b> (el IGV se le paga a SUNAT) y se restan los pagos a proveedores externos. Para no contar doble, <b>no anotes la venta de leche</b> en "Costos e ingresos".</p>'));
+
+  // Por área
+  const areas = [['agricola','Agrícola'],['ganaderia','Ganadería'],['general','General']];
+  const filasArea = areas.map(([a,t])=>{
+    const inv = sum(state.inversiones.filter(x=>(x.area||'general')===a), x=>x.monto);
+    const gan = a==='general' ? null : sum(meses, ym=>{ const [i,f]=monthBounds(ym); return resultadoPeriodo(i, f>hoy?hoy:f, a).ganancia; });
+    return '<tr><td>'+t+'</td><td class="num">'+fmtMoney(inv)+'</td><td class="num">'+(gan===null?'—':fmtMoney(gan))+'</td><td class="num">'+(gan===null||inv<=0?'—':fmtPct(gan/inv*100))+'</td></tr>';
+  }).join('');
+  main.appendChild(card('Por área', '<div class="table-wrap"><table><tr><th>Área</th><th class="num">Invertido</th><th class="num">Ganancia acumulada</th><th class="num">Recuperado</th></tr>'+filasArea+'</table></div>'));
+
+  // Mes a mes
+  const ult = porMes.slice(-12).reverse();
+  const filas = ult.map(x=>'<tr><td>'+fmtYM(x.ym)+(x.ym===ymHoy?' <span class="badge yellow">en curso</span>':'')+'</td><td class="num">'+fmtMoney(x.ingresos)+'</td><td class="num">'+fmtMoney(x.leche.neto)+'</td><td class="num">'+fmtMoney(x.costos)+'</td><td class="num" style="font-weight:600;color:'+(x.ganancia>=0?'var(--success)':'var(--danger)')+'">'+fmtMoney(x.ganancia)+'</td></tr>').join('');
+  main.appendChild(card('Ganancia mes a mes', '<div class="table-wrap"><table><tr><th>Mes</th><th class="num">Ingresos</th><th class="num">Leche neta</th><th class="num">Costos</th><th class="num">Ganancia</th></tr>'+filas+'</table></div>'));
+
+  // Registrar inversión
+  const formCard = card('Registrar una inversión', '<p class="subtle" style="margin-top:-6px">Una inversión es dinero que se pone para que el fundo produzca por años: comprar vacas, terreno, maquinaria, construir el establo, instalar riego. Los gastos del día a día (comida, luz, medicinas) van en "Costos e ingresos".</p><div class="form-row">'+
+    field('i-fecha','Fecha','date','',hoy) + field('i-concepto','¿Qué se compró o hizo?','text','Compra de 2 vacas Holstein') +
+    selectField('i-categoria','Tipo', CATEG_INVERSION) +
+    selectField('i-area','Área', [{v:'ganaderia',t:'Ganadería'},{v:'agricola',t:'Agrícola'},{v:'general',t:'General'}]) +
+    field('i-monto','Monto (S/)','number','6000') + field('i-aportante','¿Quién puso el dinero?','text','Socio / familia') +
+    '<button class="btn-primary" id="btn-add-inv">Guardar</button></div>');
+  main.appendChild(formCard);
+  formCard.querySelector('#btn-add-inv').addEventListener('click', async ()=>{
+    const monto = Number(val('i-monto')), concepto = val('i-concepto');
+    if(!concepto){ showToast('Escribe qué se compró o hizo.'); return; }
+    if(!(monto>0)){ showToast('Ingresa un monto válido.'); return; }
+    const row = await insertRow('inversiones', {fecha:val('i-fecha')||hoy, concepto, categoria:val('i-categoria'), area:val('i-area'), monto, aportante:val('i-aportante')||null});
+    if(row){ state.inversiones.push(row); showToast('Inversión guardada.'); render(); }
+  });
+
+  // Por categoría + lista
+  const porCat = {}; state.inversiones.forEach(x=>{ porCat[x.categoria||'Otro']=(porCat[x.categoria||'Otro']||0)+Number(x.monto); });
+  const catRows = Object.entries(porCat).sort((a,b)=>b[1]-a[1]).map(([c,m])=>'<tr><td>'+esc(c)+'</td><td class="num">'+fmtMoney(m)+'</td><td class="num">'+fmtPct(invTotal?m/invTotal*100:0)+'</td></tr>').join('');
+  const lista = [...state.inversiones].sort((a,b)=>b.fecha.localeCompare(a.fecha)).map(x=>'<tr><td>'+fmtDate(x.fecha)+'</td><td>'+esc(x.concepto)+'</td><td>'+esc(x.categoria)+'</td><td>'+esc(x.aportante||'—')+'</td><td class="num">'+fmtMoney(x.monto)+'</td><td><button class="btn-danger" data-del="'+x.id+'">Eliminar</button></td></tr>').join('');
+  const listCard = card('Inversiones registradas', state.inversiones.length ?
+    '<div class="table-wrap"><table style="margin-bottom:18px"><tr><th>Tipo</th><th class="num">Monto</th><th class="num">% del total</th></tr>'+catRows+'</table></div>'+
+    '<div class="table-wrap"><table><tr><th>Fecha</th><th>Concepto</th><th>Tipo</th><th>Aportó</th><th class="num">Monto</th><th></th></tr>'+lista+'</table></div>'
+    : '<div class="empty">Todavía no hay inversiones. Empieza anotando lo que costaron las vacas, el terreno, el establo, etc.</div>');
+  main.appendChild(listCard);
+  bindDelete(listCard, 'inversiones');
+
+  // Ajuste: quién es producción propia
+  if(state.personas.length){
+    const tieneCol = state.personas.some(p=>'propia' in p);
+    const ajustes = card('Ajuste: ¿qué leche es del propio fundo?', tieneCol ?
+      '<p class="subtle" style="margin-top:-6px">Marca a las personas cuya leche es producción propia (no se les paga como proveedor). Esto cambia el cálculo de la ganancia.</p>'+
+      state.personas.map(p=>'<label style="display:flex;gap:10px;align-items:center;padding:6px 0;font-size:15px"><input type="checkbox" data-propia="'+esc(p.id)+'" '+(p.propia?'checked':'')+' style="width:20px;height:20px"> '+esc(p.nombre)+'</label>').join('')
+      : '<div class="empty">Ejecuta <code>supabase-cambios.sql</code> para activar este ajuste.</div>');
+    main.appendChild(ajustes);
+    ajustes.querySelectorAll('[data-propia]').forEach(cb=>cb.addEventListener('change', async ()=>{
+      const row = await updateRow('personas', cb.getAttribute('data-propia'), {propia: cb.checked});
+      if(row){ replaceInState('personas', row); showToast('Ajuste guardado.'); render(); }
+    }));
+  }
+}
+
+// =====================================================================
+// Indicadores (KPI + control estadístico, Lean Six Sigma)
+// =====================================================================
+function semaforo(tone){ return tone==='success'?'green':tone==='danger'?'red':'yellow'; }
+function controlChartSVG(puntos, media, lsc, lic){
+  const W=680, Hh=230, pl=44, pr=12, pt=14, pb=34;
+  const vals = puntos.map(p=>p.v);
+  let ymin = Math.min(lic, ...vals), ymax = Math.max(lsc, ...vals);
+  const pad = (ymax-ymin)*0.08 || 1; ymin -= pad; ymax += pad;
+  const x = i => pl + (puntos.length===1 ? (W-pl-pr)/2 : i*(W-pl-pr)/(puntos.length-1));
+  const y = v => pt + (ymax - v)*(Hh-pt-pb)/(ymax-ymin);
+  const linea = (v, color, txt, dash) => '<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+color+'" stroke-width="1.5" '+(dash?'stroke-dasharray="5 4"':'')+'/><text x="'+(pl-4)+'" y="'+(y(v)+4)+'" font-size="10.5" text-anchor="end" fill="'+color+'">'+txt+'</text>';
+  let s = '<svg viewBox="0 0 '+W+' '+Hh+'" style="width:100%;height:auto;font-family:inherit">';
+  s += linea(lsc,'#B23A2E',Math.round(lsc),true) + linea(media,'#3D5A3D',Math.round(media),false) + linea(lic,'#B23A2E',Math.round(lic),true);
+  s += '<polyline fill="none" stroke="#C08A2E" stroke-width="2" points="'+puntos.map((p,i)=>x(i)+','+y(p.v)).join(' ')+'"/>';
+  puntos.forEach((p,i)=>{ const fuera = p.v>lsc || p.v<lic; s += '<circle cx="'+x(i)+'" cy="'+y(p.v)+'" r="'+(fuera?5.5:3.5)+'" fill="'+(fuera?'#B23A2E':'#C08A2E')+'"><title>'+fmtDate(p.f)+': '+fmtNum(p.v)+' L</title></circle>'; });
+  const paso = Math.max(1, Math.ceil(puntos.length/8));
+  puntos.forEach((p,i)=>{ if(i%paso===0 || i===puntos.length-1){ const [,m,d]=p.f.split('-'); s += '<text x="'+x(i)+'" y="'+(Hh-12)+'" font-size="10.5" text-anchor="middle" fill="#756F5C">'+d+'/'+m+'</text>'; } });
+  return s + '</svg>';
+}
+function renderIndicadores(main){
+  main.appendChild(titleBlock('Indicadores (KPI)','Medir para mejorar: verde = bien, amarillo = atención, rojo = actuar'));
+  const hoy = todayISO(), ini30 = addDays(hoy,-29);
+
+  // ---- Leche
+  const diario = lecheDiaria(ini30, hoy);
+  const dias = Object.keys(diario).sort();
+  const totales = dias.map(f=>diario[f]);
+  const promDia = totales.length ? sum(totales,x=>x)/totales.length : 0;
+  const sem = sum(regsIn(addDays(hoy,-6),hoy), r=>r.litros), semAnt = sum(regsIn(addDays(hoy,-13),addDays(hoy,-7)), r=>r.litros);
+  const varSem = semAnt>0 ? (sem-semAnt)/semAnt*100 : NaN;
+  const desv = totales.length>1 ? Math.sqrt(sum(totales, v=>(v-promDia)**2)/(totales.length-1)) : 0;
+  const cv = promDia>0 ? desv/promDia*100 : NaN;
+  const vacas = state.ganado.filter(g=>g.estado==='Activo' && /vaca/i.test(g.tipo||'')).length;
+  const leche30 = lecheNeta(ini30, hoy);
+  const diasConDatos = Math.max(1, dias.length);
+  const lxv = vacas>0 && leche30.litrosPropios>0 ? leche30.litrosPropios/diasConDatos/vacas : NaN;
+  const costoGan = sum(movsIn(ini30, hoy, 'ganaderia').filter(m=>m.tipo==='costo'), m=>m.monto);
+  const costoLitro = leche30.litrosPropios>0 ? costoGan/leche30.litrosPropios : NaN;
+  const precioProm = leche30.litros>0 ? leche30.venta/leche30.litros : NaN;
+  const sinReg = diasSinRegistro(30);
+
+  const tVar = isNaN(varSem)?'':(varSem>=0?'success':(varSem>=-5?'warn':'danger'));
+  const tCv = isNaN(cv)?'':(cv<=10?'success':(cv<=20?'warn':'danger'));
+  const tCosto = isNaN(costoLitro)||isNaN(precioProm)?'':(costoLitro<precioProm*0.7?'success':(costoLitro<precioProm?'warn':'danger'));
+  const tSin = sinReg.length===0?'success':(sinReg.length<=2?'warn':'danger');
+  main.appendChild(card('Leche · últimos 30 días', '<div class="grid grid-3">'+
+    metric('Promedio por día', fmtNum(promDia)+' L', '', dias.length+' días con registro') +
+    metric('Esta semana vs anterior', isNaN(varSem)?'—':(varSem>=0?'▲ ':'▼ ')+fmtPct(Math.abs(varSem)), tVar, fmtNum(sem)+' L vs '+fmtNum(semAnt)+' L') +
+    metric('Estabilidad (variación)', fmtPct(cv), tCv, 'Menos de 10 % = producción pareja') +
+    metric('Litros por vaca al día', isNaN(lxv)?'—':fmtNum(lxv)+' L', '', vacas ? vacas+' vacas activas (solo leche propia)' : 'Registra vacas con tipo "Vaca…" y estado Activo') +
+    metric('Costo por litro propio', isNaN(costoLitro)?'—':fmtMoney(costoLitro), tCosto, isNaN(precioProm)?'Gastos de ganadería ÷ litros propios':'Se vende a '+fmtMoney(precioProm)+' /L sin IGV') +
+    metric('Días sin registrar', sinReg.length, tSin, 'Meta: 0 días (cero defectos)') + '</div>'));
+
+  // ---- Gráfico de control
+  let ccHtml;
+  if(dias.length >= 5){
+    const mr = []; for(let i=1;i<totales.length;i++) mr.push(Math.abs(totales[i]-totales[i-1]));
+    const mrProm = sum(mr,x=>x)/mr.length;
+    const lsc = promDia + 2.66*mrProm, lic = Math.max(0, promDia - 2.66*mrProm);
+    const puntos = dias.map(f=>({f, v:diario[f]}));
+    const fuera = puntos.filter(p=>p.v>lsc || p.v<lic);
+    let racha=0, lado=0, tendencia=null;
+    puntos.forEach(p=>{ const l = p.v>promDia?1:(p.v<promDia?-1:0); if(l!==0 && l===lado) racha++; else { racha = l!==0?1:0; lado=l; } if(racha>=7 && !tendencia) tendencia = lado; });
+    const notas = [];
+    if(fuera.length) notas.push('<li><span class="dot red"></span><span><b>Días fuera de control:</b> '+fuera.map(p=>fmtDate(p.f)+' ('+fmtNum(p.v)+' L)').join(', ')+'. Algo pasó ese día: vaca enferma, cambio de comida, falta de agua o error al anotar. Averigua la causa.</span></li>');
+    if(tendencia) notas.push('<li><span class="dot yellow"></span><span><b>Tendencia:</b> 7 o más días seguidos '+(tendencia>0?'por encima':'por debajo')+' del promedio. '+(tendencia>0?'Algo mejoró: identifica qué fue para mantenerlo.':'La producción está bajando de forma constante: revisa alimentación y salud del hato.')+'</span></li>');
+    if(!notas.length) notas.push('<li><span class="dot green"></span><span>La producción está <b>bajo control</b>: las subidas y bajadas son normales.</span></li>');
+    ccHtml = controlChartSVG(puntos, promDia, lsc, lic) +
+      '<p class="subtle" style="margin:6px 0 10px">Línea verde = promedio. Líneas rojas = límites normales (calculados con el método Six Sigma de "carta de control"). Un punto fuera de las líneas rojas no es casualidad.</p><ul class="alert-list">'+notas.join('')+'</ul>';
+  } else ccHtml = '<div class="empty">Se necesitan al menos 5 días con registro de leche para dibujar la carta de control.</div>';
+  main.appendChild(card('Carta de control de la leche (Six Sigma)', ccHtml));
+
+  // ---- Campo
+  const totalHa = sum(state.hectareas, h=>h.area||1);
+  const enUso = state.hectareas.filter(h=>siembraActiva(h.id));
+  const haUso = sum(enUso, h=>h.area||1);
+  const uso = totalHa>0 ? haUso/totalHa*100 : NaN;
+  const hace365 = addDays(hoy,-364);
+  const lab12 = state.labores.filter(l=>l.fecha>=hace365);
+  const haConLabor = new Set(lab12.filter(l=>Number(l.costo)>0).map(l=>l.hectarea_id));
+  const costoHa = haConLabor.size ? sum(lab12, l=>l.costo)/haConLabor.size : NaN;
+  const cosechas = lab12.filter(l=>l.tipo==='Cosecha' && l.unidad==='kg' && Number(l.cantidad)>0);
+  const haCosechadas = [...new Set(cosechas.map(l=>l.hectarea_id))];
+  const areaCos = sum(haCosechadas, id=>{ const h=state.hectareas.find(x=>x.id===id); return h?(h.area||1):1; });
+  const rend = areaCos>0 ? sum(cosechas, l=>l.cantidad)/areaCos : NaN;
+  const ingCampo = sum(lab12, l=>l.ingreso), costCampo = sum(lab12, l=>l.costo);
+  const desatendidas = enUso.filter(h=>{ const r = ultimaActividad(h.id); return !r || daysBetween(r, hoy)>=15; }).length;
+  const tUso = isNaN(uso)?'':(uso>=80?'success':(uso>=50?'warn':'danger'));
+  main.appendChild(card('Campo · últimos 12 meses', totalHa ? '<div class="grid grid-3">'+
+    metric('Hectáreas en uso', fmtNum(haUso)+' de '+fmtNum(totalHa)+' ha', tUso, fmtPct(uso)+' del terreno trabajando') +
+    metric('Costo promedio por hectárea', isNaN(costoHa)?'—':fmtMoney(costoHa), '', 'Suma de trabajos anotados') +
+    metric('Rendimiento promedio', isNaN(rend)?'—':fmtNum(rend)+' kg/ha', '', cosechas.length+' cosecha(s) en kg') +
+    metric('Ingresos de cosechas', fmtMoney(ingCampo), 'success') +
+    metric('Ganancia del campo', fmtMoney(ingCampo-costCampo), ingCampo-costCampo>=0?'success':'danger', 'Solo trabajos anotados por hectárea') +
+    metric('Hectáreas desatendidas', desatendidas, desatendidas===0?'success':'warn', 'Con cultivo y sin trabajo en 15+ días') + '</div>'
+    : '<div class="empty">Registra tus parcelas y hectáreas para ver estos indicadores.</div>'));
+
+  // ---- Lean: calidad de los datos
+  const movs90 = movsIn(addDays(hoy,-89), hoy);
+  const otros = movs90.filter(m=>m.categoria==='Otro').length;
+  const pctOtro = movs90.length ? otros/movs90.length*100 : 0;
+  const sinDetalle = state.labores.filter(l=>l.fecha>=addDays(hoy,-89) && !l.detalle).length;
+  const items = [
+    [tSin, 'Días sin registro de leche (30 días)', sinReg.length+' día(s)', sinReg.length?'Fechas: '+sinReg.slice(-6).map(fmtDate).join(', ')+(sinReg.length>6?'…':''):'Perfecto.'],
+    [pctOtro<=10?'success':(pctOtro<=25?'warn':'danger'), 'Gastos anotados como "Otro" (90 días)', fmtPct(pctOtro), 'Si es mucho, no sabremos en qué se va el dinero. Elige una categoría concreta.'],
+    [sinDetalle===0?'success':'warn', 'Trabajos de campo sin detalle (90 días)', sinDetalle, 'Anota el producto o insumo usado (ej. "Urea 2 sacos").']
+  ];
+  main.appendChild(card('Calidad de los datos (Lean: cero defectos)', '<ul class="alert-list">'+items.map(i=>'<li><span class="dot '+semaforo(i[0])+'"></span><span><b>'+i[1]+':</b> '+i[2]+'<br><span class="subtle">'+i[3]+'</span></span></li>').join('')+'</ul>'));
+
+  main.appendChild(card('Cómo usar estos indicadores (ciclo DMAIC)', '<ol style="margin:0;padding-left:20px;line-height:1.8">'+
+    '<li><b>Definir:</b> elige un problema concreto (ej. "la leche bajó esta semana").</li>'+
+    '<li><b>Medir:</b> anota todo cada día, sin días vacíos. Sin datos no hay mejora.</li>'+
+    '<li><b>Analizar:</b> mira la carta de control y los días en rojo: ¿qué pasó ese día?</li>'+
+    '<li><b>Mejorar:</b> cambia una sola cosa (comida, horario de ordeño, riego) y observa 2 semanas.</li>'+
+    '<li><b>Controlar:</b> si mejoró, hazlo la nueva costumbre y sigue revisando cada semana.</li></ol>'));
+}
+
+// =====================================================================
+// Parcelas y hectáreas
+// =====================================================================
+function haTone(h){
+  const s = siembraActiva(h.id);
+  if(!s) return ['', 'Libre'];
+  if(s.fecha_cosecha && daysBetween(todayISO(), s.fecha_cosecha)<=15) return ['cosecha', 'Por cosechar'];
+  return [s.estado==='En crecimiento'?'crecimiento':'sembrado', s.estado];
+}
+function haTiles(pid, selId){
+  const hs = hectareasDe(pid);
+  return '<div class="ha-grid">'+hs.map(h=>{ const s=siembraActiva(h.id), [cls,est]=haTone(h);
+    return '<div class="ha-tile '+cls+(h.id===selId?' sel':'')+'" data-ha="'+h.id+'"><div class="n">Ha '+h.numero+'</div><div class="c">'+(s?esc(s.cultivo):'—')+'</div><div class="e">'+esc(est)+'</div></div>'; }).join('')+'</div>';
+}
+async function crearHectareas(parcela, n){
+  const filas = []; const existentes = hectareasDe(parcela.id).map(h=>h.numero);
+  for(let i=1;i<=n;i++) if(!existentes.includes(i)) filas.push({parcela_id:parcela.id, numero:i, area:1});
+  if(!filas.length) return true;
+  const { data, error } = await sb.from('hectareas').insert(filas).select();
+  if(error){ showToast('No se pudieron crear las hectáreas: '+error.message); return false; }
+  state.hectareas.push(...data); return true;
+}
 function renderParcelas(main){
-  main.appendChild(titleBlock('Parcelas','Áreas de cultivo del fundo'));
+  if(nav.hectareaId) return renderHectarea(main);
+  if(nav.parcelaId) return renderParcela(main);
+  main.appendChild(titleBlock('Parcelas y hectáreas','Cada parcela se divide en hectáreas. Toca una hectárea para ver y anotar todo lo que pasa en ella.'));
   const formCard = card('Agregar parcela', '<div class="form-row">'+
-    field('p-nombre','Nombre','text','Parcela D') + field('p-area','Área (ha)','number','1.5') +
+    field('p-nombre','Nombre','text','Parcela D') + field('p-has','N.º de hectáreas','number','5','5') +
     field('p-ubicacion','Ubicación','text','Sector norte') + '<button class="btn-primary" id="btn-add-parcela">Agregar</button></div>');
   main.appendChild(formCard);
-  const rows = state.parcelas.map(p=>{
-    const enSiembra = state.siembras.find(s=>s.parcela_id===p.id && s.estado!=='Cosechado');
-    return '<tr><td>'+esc(p.nombre)+'</td><td>'+fmtNum(p.area)+' ha</td><td>'+esc(p.ubicacion||'—')+'</td><td>'+(enSiembra?esc(enSiembra.cultivo):'<span class="subtle">sin siembra activa</span>')+'</td>'+
-      '<td><button class="btn-danger" data-del="'+p.id+'">Eliminar</button></td></tr>';
-  }).join('');
-  const listCard = card('Parcelas registradas', state.parcelas.length ?
-    '<table><tr><th>Nombre</th><th>Área</th><th>Ubicación</th><th>Cultivo actual</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay parcelas registradas.</div>');
-  main.appendChild(listCard);
-  document.getElementById('btn-add-parcela').addEventListener('click', async ()=>{
-    const nombre = val('p-nombre'), area = val('p-area'), ubicacion = val('p-ubicacion');
-    if(!nombre || !area){ showToast('Falta nombre o área.'); return; }
-    const row = await insertRow('parcelas', {nombre, area:Number(area), ubicacion});
-    if(row){ state.parcelas.push(row); render(); }
+  formCard.querySelector('#btn-add-parcela').addEventListener('click', async ()=>{
+    const nombre = val('p-nombre'), n = Math.round(Number(val('p-has')||5));
+    if(!nombre){ showToast('Falta el nombre.'); return; }
+    if(!(n>=1 && n<=50)){ showToast('El número de hectáreas debe ser entre 1 y 50.'); return; }
+    const row = await insertRow('parcelas', {nombre, area:n, ubicacion:val('p-ubicacion')});
+    if(row){ state.parcelas.push(row); await crearHectareas(row, n); showToast('Parcela creada con '+n+' hectáreas.'); render(); }
   });
-  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
-    const id = b.getAttribute('data-del');
-    if(await deleteRow('parcelas', id)){ state.parcelas = state.parcelas.filter(p=>p.id!==id); render(); }
-  }));
+  if(!state.parcelas.length){ main.appendChild(card('', '<div class="empty">Todavía no hay parcelas registradas.</div>')); return; }
+  state.parcelas.forEach(p=>{
+    const hs = hectareasDe(p.id);
+    const ids = hs.map(h=>h.id);
+    const lab = state.labores.filter(l=>ids.includes(l.hectarea_id));
+    const resumen = '<span class="subtle">'+fmtNum(p.area)+' ha · '+esc(p.ubicacion||'sin ubicación')+' · costos '+fmtMoney(sum(lab,l=>l.costo))+' · ingresos '+fmtMoney(sum(lab,l=>l.ingreso))+'</span>';
+    const c = card(esc(p.nombre), resumen + '<div style="margin-top:12px">' + (hs.length ? haTiles(p.id) :
+      '<div class="banner info" style="margin:0">Esta parcela aún no tiene hectáreas. <button class="btn-primary" data-crear="'+p.id+'" style="margin-left:8px">Crear sus '+Math.max(1,Math.round(Number(p.area)||5))+' hectáreas</button></div>') + '</div>',
+      '<button class="btn-ghost" data-ver="'+p.id+'">Ver parcela</button>');
+    main.appendChild(c);
+    c.querySelectorAll('[data-ha]').forEach(t=>t.addEventListener('click', ()=>go('parcelas', {parcelaId:p.id, hectareaId:t.getAttribute('data-ha')})));
+    c.querySelector('[data-ver]').addEventListener('click', ()=>go('parcelas', {parcelaId:p.id}));
+    const cb = c.querySelector('[data-crear]');
+    if(cb) cb.addEventListener('click', async ()=>{ if(await crearHectareas(p, Math.max(1,Math.round(Number(p.area)||5)))){ showToast('Hectáreas creadas.'); render(); } });
+  });
+}
+function renderParcela(main){
+  const p = state.parcelas.find(x=>x.id===nav.parcelaId); if(!p) return go('parcelas');
+  const hs = hectareasDe(p.id);
+  const crumbs = document.createElement('div'); crumbs.className='crumbs';
+  crumbs.innerHTML = '<button class="btn-link" id="cr-back">← Todas las parcelas</button>'; main.appendChild(crumbs);
+  crumbs.querySelector('#cr-back').addEventListener('click', ()=>go('parcelas'));
+  main.appendChild(titleBlock(esc(p.nombre), fmtNum(p.area)+' ha · '+esc(p.ubicacion||'sin ubicación')));
+  const ids = hs.map(h=>h.id);
+  const lab = state.labores.filter(l=>ids.includes(l.hectarea_id));
+  const filas = hs.map(h=>{ const l=laboresDe(h.id), s=siembraActiva(h.id), c=sum(l,x=>x.costo), i=sum(l,x=>x.ingreso);
+    return '<tr><td><button class="btn-link" data-ha="'+h.id+'">Hectárea '+h.numero+'</button></td><td>'+(s?esc(s.cultivo):'—')+'</td><td>'+(l[0]?fmtDate(l[0].fecha)+' · '+esc(l[0].tipo):'—')+'</td><td class="num">'+fmtMoney(c)+'</td><td class="num">'+fmtMoney(i)+'</td><td class="num" style="color:'+(i-c>=0?'var(--success)':'var(--danger)')+'">'+fmtMoney(i-c)+'</td></tr>'; }).join('');
+  const c = card('Hectáreas', haTiles(p.id) + '<div class="table-wrap" style="margin-top:16px"><table><tr><th>Hectárea</th><th>Cultivo</th><th>Último trabajo</th><th class="num">Costos</th><th class="num">Ingresos</th><th class="num">Ganancia</th></tr>'+filas+
+    '<tr><td colspan="3"><b>Total parcela</b></td><td class="num"><b>'+fmtMoney(sum(lab,l=>l.costo))+'</b></td><td class="num"><b>'+fmtMoney(sum(lab,l=>l.ingreso))+'</b></td><td class="num"><b>'+fmtMoney(sum(lab,l=>l.ingreso)-sum(lab,l=>l.costo))+'</b></td></tr></table></div>' +
+    '<div style="margin-top:12px"><button class="btn-ghost" id="btn-add-ha">+ Agregar una hectárea</button></div>');
+  main.appendChild(c);
+  c.querySelectorAll('[data-ha]').forEach(t=>t.addEventListener('click', ()=>go('parcelas', {parcelaId:p.id, hectareaId:t.getAttribute('data-ha')})));
+  c.querySelector('#btn-add-ha').addEventListener('click', async ()=>{
+    const n = (hs.length ? Math.max(...hs.map(h=>h.numero)) : 0) + 1;
+    const row = await insertRow('hectareas', {parcela_id:p.id, numero:n, area:1});
+    if(row){ state.hectareas.push(row); const up = await updateRow('parcelas', p.id, {area: hs.length+1}); if(up) replaceInState('parcelas', up); render(); }
+  });
+
+  // Siembras antiguas sin hectárea
+  const viejas = state.siembras.filter(s=>s.parcela_id===p.id && !s.hectarea_id);
+  if(viejas.length && hs.length){
+    const opts = '<option value="">Asignar a…</option>'+hs.map(h=>'<option value="'+h.id+'">Hectárea '+h.numero+'</option>').join('');
+    const vc = card('Siembras anteriores sin hectárea', '<p class="subtle" style="margin-top:-6px">Se registraron antes de dividir en hectáreas. Asígnalas a una hectárea para que aparezcan en su historial.</p><div class="table-wrap"><table><tr><th>Cultivo</th><th>Siembra</th><th>Estado</th><th></th></tr>'+
+      viejas.map(s=>'<tr><td>'+esc(s.cultivo)+'</td><td>'+fmtDate(s.fecha_siembra)+'</td><td><span class="badge">'+esc(s.estado)+'</span></td><td><select data-asig="'+s.id+'">'+opts+'</select></td></tr>').join('')+'</table></div>');
+    main.appendChild(vc);
+    vc.querySelectorAll('[data-asig]').forEach(sel=>sel.addEventListener('change', async ()=>{
+      if(!sel.value) return; const row = await updateRow('siembras', sel.getAttribute('data-asig'), {hectarea_id: sel.value});
+      if(row){ replaceInState('siembras', row); showToast('Siembra asignada.'); render(); }
+    }));
+  }
+  const dc = card('', '<button class="btn-danger" id="btn-del-parcela">Eliminar esta parcela</button>');
+  main.appendChild(dc);
+  dc.querySelector('#btn-del-parcela').addEventListener('click', async ()=>{
+    if(!await askConfirm('¿Eliminar la parcela "'+esc(p.nombre)+'" con sus hectáreas y su historial de trabajos? Los gastos e ingresos en dinero se conservan.', 'Sí, eliminar', true)) return;
+    if(await deleteRow('parcelas', p.id)){
+      state.parcelas = state.parcelas.filter(x=>x.id!==p.id);
+      state.labores = state.labores.filter(l=>!ids.includes(l.hectarea_id));
+      state.hectareas = state.hectareas.filter(h=>h.parcela_id!==p.id);
+      showToast('Parcela eliminada.'); go('parcelas');
+    }
+  });
+}
+function renderHectarea(main){
+  const h = state.hectareas.find(x=>x.id===nav.hectareaId); if(!h) return go('parcelas');
+  const p = state.parcelas.find(x=>x.id===h.parcela_id);
+  const hoy = todayISO();
+  const crumbs = document.createElement('div'); crumbs.className='crumbs';
+  crumbs.innerHTML = '<button class="btn-link" id="cr-all">Parcelas</button> › <button class="btn-link" id="cr-p">'+esc(p?p.nombre:'')+'</button> › Hectárea '+h.numero;
+  main.appendChild(crumbs);
+  crumbs.querySelector('#cr-all').addEventListener('click', ()=>go('parcelas'));
+  crumbs.querySelector('#cr-p').addEventListener('click', ()=>go('parcelas', {parcelaId:h.parcela_id}));
+  main.appendChild(titleBlock((p?esc(p.nombre)+' · ':'')+'Hectárea '+h.numero, 'Todo lo que pasa en esta hectárea: cultivo, trabajos, costos y cosechas'));
+  const selCard = card('', haTiles(h.parcela_id, h.id)); main.appendChild(selCard);
+  selCard.querySelectorAll('[data-ha]').forEach(t=>t.addEventListener('click', ()=>go('parcelas', {parcelaId:h.parcela_id, hectareaId:t.getAttribute('data-ha')})));
+
+  const labs = laboresDe(h.id);
+  const s = siembraActiva(h.id);
+  const labsCiclo = s && s.fecha_siembra ? labs.filter(l=>l.fecha>=s.fecha_siembra) : labs;
+  const ultRiego = labs.find(l=>l.tipo==='Riego');
+  const costo = sum(labs,l=>l.costo), ingreso = sum(labs,l=>l.ingreso);
+  const ultCos = labs.find(l=>l.tipo==='Cosecha' && l.unidad==='kg' && Number(l.cantidad)>0);
+  main.appendChild(card('', '<div class="grid grid-4">'+
+    metric('Costos (total)', fmtMoney(costo), 'danger', s?'Este cultivo: '+fmtMoney(sum(labsCiclo,l=>l.costo)):'') +
+    metric('Ingresos (total)', fmtMoney(ingreso), 'success') +
+    metric('Ganancia', fmtMoney(ingreso-costo), ingreso-costo>=0?'success':'danger') +
+    metric('Último riego', ultRiego ? 'Hace '+daysBetween(ultRiego.fecha,hoy)+' días' : '—', '', ultRiego?fmtDate(ultRiego.fecha):'Sin riegos anotados') + '</div>' +
+    (ultCos ? '<p class="subtle" style="margin:12px 0 0">Última cosecha: <b>'+fmtNum(ultCos.cantidad)+' kg</b> el '+fmtDate(ultCos.fecha)+' → rendimiento '+fmtNum(ultCos.cantidad/(h.area||1))+' kg/ha.</p>' : '')));
+
+  // Cultivo
+  let cultHtml;
+  if(s){
+    const dd = s.fecha_cosecha ? daysBetween(hoy, s.fecha_cosecha) : null;
+    cultHtml = '<div class="grid grid-4" style="margin-bottom:14px">'+metric('Cultivo', esc(s.cultivo))+metric('Sembrado', fmtDate(s.fecha_siembra), '', s.fecha_siembra?'Hace '+daysBetween(s.fecha_siembra,hoy)+' días':'')+
+      metric('Cosecha estimada', fmtDate(s.fecha_cosecha), dd===null?'':(dd<0?'danger':(dd<=15?'accent':'')), dd===null?'':(dd<0?(-dd)+' días de retraso':'Faltan '+dd+' días'))+metric('Estado', esc(s.estado))+'</div>'+
+      '<div class="form-row">'+selectField('s-estado','Cambiar estado',['Sembrado','En crecimiento','Cosechado'], s.estado)+field('s-fcos','Cosecha estimada','date','',s.fecha_cosecha||'')+'<button class="btn-primary" id="btn-upd-s">Actualizar</button></div>';
+  } else {
+    cultHtml = '<p class="subtle" style="margin-top:-6px">Esta hectárea está libre. Anota el nuevo cultivo cuando siembres.</p><div class="form-row">'+field('s-cultivo','Cultivo','text','Alfalfa')+field('s-fsiembra','Fecha de siembra','date','',hoy)+field('s-fcos','Cosecha estimada','date','')+'<button class="btn-primary" id="btn-new-s">Registrar siembra</button></div>';
+  }
+  const hist = state.siembras.filter(x=>x.hectarea_id===h.id && x.estado==='Cosechado').sort((a,b)=>(b.fecha_siembra||'').localeCompare(a.fecha_siembra||''));
+  if(hist.length) cultHtml += '<h3 style="margin:10px 0 6px">Cultivos anteriores</h3><div class="table-wrap"><table><tr><th>Cultivo</th><th>Siembra</th><th>Cosecha</th></tr>'+hist.map(x=>'<tr><td>'+esc(x.cultivo)+'</td><td>'+fmtDate(x.fecha_siembra)+'</td><td>'+fmtDate(x.fecha_cosecha)+'</td></tr>').join('')+'</table></div>';
+  const cc = card('Cultivo actual', cultHtml); main.appendChild(cc);
+  const bu = cc.querySelector('#btn-upd-s');
+  if(bu) bu.addEventListener('click', async ()=>{
+    const row = await updateRow('siembras', s.id, {estado:val('s-estado'), fecha_cosecha:val('s-fcos')||null});
+    if(row){ replaceInState('siembras', row); showToast('Cultivo actualizado.'); render(); }
+  });
+  const bn = cc.querySelector('#btn-new-s');
+  if(bn) bn.addEventListener('click', async ()=>{
+    const cultivo = val('s-cultivo'); if(!cultivo){ showToast('Escribe el cultivo.'); return; }
+    const row = await insertRow('siembras', {parcela_id:h.parcela_id, hectarea_id:h.id, cultivo, fecha_siembra:val('s-fsiembra')||hoy, fecha_cosecha:val('s-fcos')||null, estado:'Sembrado'});
+    if(row){ state.siembras.push(row); showToast('Siembra registrada.'); render(); }
+  });
+
+  // Anotar trabajo
+  const fc = card('Anotar un trabajo', '<div class="form-row">'+
+    selectField('l-tipo','Trabajo', TIPOS_LABOR) + field('l-fecha','Fecha','date','',hoy) +
+    field('l-detalle','Detalle / producto','text','Urea, agua de canal…') +
+    field('l-cant','Cantidad','number','2') + selectField('l-unidad','Unidad', UNIDADES) +
+    field('l-costo','Costo (S/)','number','0') +
+    '<div class="field" id="wrap-ingreso" style="display:none"><label for="l-ingreso">Venta de la cosecha (S/)</label><input id="l-ingreso" type="number" inputmode="decimal" step="any" placeholder="0"></div>' +
+    '<button class="btn-primary" id="btn-add-labor">Guardar</button></div><p class="subtle" style="margin:0">Si pones un costo o una venta, también se anota solo en "Costos e ingresos".</p>');
+  main.appendChild(fc);
+  const tipoSel = fc.querySelector('#l-tipo');
+  tipoSel.addEventListener('change', ()=>{ const c = tipoSel.value==='Cosecha'; fc.querySelector('#wrap-ingreso').style.display = c?'flex':'none'; if(c) fc.querySelector('#l-unidad').value='kg'; });
+  fc.querySelector('#btn-add-labor').addEventListener('click', async ()=>{
+    const ok = await guardarLabor({hectarea:h, tipo:val('l-tipo'), fecha:val('l-fecha')||hoy, detalle:val('l-detalle'), cantidad:val('l-cant'), unidad:val('l-unidad'), costo:val('l-costo'), ingreso:val('l-ingreso')});
+    if(ok){ showToast('Trabajo guardado.'); render(); }
+  });
+
+  // Historial
+  const filas = labs.map(l=>'<tr><td style="white-space:nowrap">'+fmtDate(l.fecha)+'</td><td>'+(ICONO_LABOR[l.tipo]||'')+' '+esc(l.tipo)+'</td><td>'+esc(l.detalle||'—')+'</td><td class="num">'+(l.cantidad!=null?fmtNum(l.cantidad)+' '+esc(l.unidad||''):'—')+'</td><td class="num">'+(Number(l.costo)?fmtMoney(l.costo):'—')+'</td><td class="num">'+(Number(l.ingreso)?fmtMoney(l.ingreso):'—')+'</td><td><button class="btn-danger" data-del="'+l.id+'">Eliminar</button></td></tr>').join('');
+  const hc = card('Historial de trabajos', labs.length ? '<div class="table-wrap"><table><tr><th>Fecha</th><th>Trabajo</th><th>Detalle</th><th class="num">Cantidad</th><th class="num">Costo</th><th class="num">Venta</th><th></th></tr>'+filas+'</table></div>' : '<div class="empty">Todavía no hay trabajos anotados en esta hectárea.</div>');
+  main.appendChild(hc);
+  bindDelete(hc, 'labores', async (id)=>{
+    // borra también sus movimientos de dinero vinculados
+    const l = labs.find(x=>String(x.id)===String(id)); if(!l) return;
+    for(const mid of [l.movimiento_id, l.movimiento_ingreso_id].filter(Boolean)){
+      if(await deleteRow('movimientos', mid)) state.movimientos = state.movimientos.filter(m=>String(m.id)!==String(mid));
+    }
+  }, ()=>'¿Eliminar este trabajo? También se borrará su costo o venta en "Costos e ingresos".');
+}
+async function guardarLabor(o){
+  const h = o.hectarea, p = state.parcelas.find(x=>x.id===h.parcela_id);
+  const costo = Number(o.costo)||0, ingreso = o.tipo==='Cosecha' ? (Number(o.ingreso)||0) : 0;
+  if(costo<0 || ingreso<0){ showToast('Los montos no pueden ser negativos.'); return false; }
+  const desc = (p?p.nombre:'')+' · Ha '+h.numero+' · '+o.tipo+(o.detalle?' · '+o.detalle:'');
+  let movId=null, movIngId=null;
+  if(costo>0){ const m = await insertRow('movimientos', {tipo:'costo', area:'agricola', categoria:CATEG_LABOR[o.tipo]||'Otro', monto:costo, fecha:o.fecha, parcela_id:h.parcela_id, hectarea_id:h.id, descripcion:desc}); if(!m) return false; state.movimientos.push(m); movId=m.id; }
+  if(ingreso>0){ const m = await insertRow('movimientos', {tipo:'ingreso', area:'agricola', categoria:'Venta de cosecha', monto:ingreso, fecha:o.fecha, parcela_id:h.parcela_id, hectarea_id:h.id, descripcion:desc}); if(m){ state.movimientos.push(m); movIngId=m.id; } }
+  const row = await insertRow('labores', {hectarea_id:h.id, parcela_id:h.parcela_id, fecha:o.fecha, tipo:o.tipo, detalle:o.detalle||null,
+    cantidad: o.cantidad!=='' && o.cantidad!=null ? Number(o.cantidad) : null, unidad:o.unidad||null, costo, ingreso, movimiento_id:movId, movimiento_ingreso_id:movIngId});
+  if(!row){ // deshacer movimientos para no dejar dinero suelto
+    for(const mid of [movId, movIngId].filter(Boolean)){ await deleteRow('movimientos', mid); state.movimientos = state.movimientos.filter(m=>m.id!==mid); }
+    return false;
+  }
+  state.labores.push(row); return true;
 }
 
-// ---------- Siembras ----------
-function renderSiembras(main){
-  main.appendChild(titleBlock('Siembras','Qué se sembró en cada parcela y su estado'));
-  if(!state.parcelas.length){ main.appendChild(card('', '<div class="empty">Primero registra una parcela.</div>')); return; }
-  const options = state.parcelas.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');
-  const formCard = card('Agregar siembra', '<div class="form-row">'+
-    '<div class="field"><label>Parcela</label><select id="s-parcela">'+options+'</select></div>' +
-    field('s-cultivo','Cultivo','text','Alfalfa') + field('s-fsiembra','Fecha de siembra','date','') + field('s-fcosecha','Cosecha estimada','date','') +
-    '<div class="field"><label>Estado</label><select id="s-estado"><option>Sembrado</option><option>En crecimiento</option><option>Cosechado</option></select></div>' +
-    '<button class="btn-primary" id="btn-add-siembra">Agregar</button></div>');
-  main.appendChild(formCard);
-  const rows = state.siembras.map(s=>{
-    const p = state.parcelas.find(pp=>pp.id===s.parcela_id);
-    return '<tr><td>'+esc(p?p.nombre:'—')+'</td><td>'+esc(s.cultivo)+'</td><td>'+(s.fecha_siembra||'—')+'</td><td>'+(s.fecha_cosecha||'—')+'</td><td><span class="badge">'+esc(s.estado)+'</span></td>'+
-      '<td><button class="btn-danger" data-del="'+s.id+'">Eliminar</button></td></tr>';
-  }).join('');
-  const listCard = card('Siembras registradas', state.siembras.length ?
-    '<table><tr><th>Parcela</th><th>Cultivo</th><th>Siembra</th><th>Cosecha est.</th><th>Estado</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay siembras registradas.</div>');
-  main.appendChild(listCard);
-  document.getElementById('btn-add-siembra').addEventListener('click', async ()=>{
-    const cultivo = val('s-cultivo');
-    if(!cultivo){ showToast('Falta el nombre del cultivo.'); return; }
-    const row = await insertRow('siembras', {parcela_id:val('s-parcela'), cultivo, fecha_siembra:val('s-fsiembra')||null, fecha_cosecha:val('s-fcosecha')||null, estado:val('s-estado')});
-    if(row){ state.siembras.push(row); render(); }
-  });
-  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
-    const id = b.getAttribute('data-del');
-    if(await deleteRow('siembras', id)){ state.siembras = state.siembras.filter(s=>s.id!==id); render(); }
-  }));
-}
-
-// ---------- Ganado ----------
+// =====================================================================
+// Ganado
+// =====================================================================
 function renderGanado(main){
   main.appendChild(titleBlock('Ganado','Animales del fundo y su gasto operativo'));
   const formCard = card('Agregar animal', '<div class="form-row">'+
     field('g-arete','Arete / ID','text','052') + field('g-tipo','Tipo','text','Vaca lechera') + field('g-fnac','Fecha nacimiento','date','') +
-    '<div class="field"><label>Estado</label><select id="g-estado"><option>Activo</option><option>Seco</option><option>Vendido</option></select></div>' +
+    selectField('g-estado','Estado',['Activo','Seco','Vendido']) +
     '<button class="btn-primary" id="btn-add-ganado">Agregar</button></div>');
   main.appendChild(formCard);
   const rows = state.ganado.map(g=>{
-    const gasto = state.movimientos.filter(m=>m.ganado_id===g.id && m.tipo==='costo').reduce((s,m)=>s+Number(m.monto),0);
-    return '<tr><td>'+esc(g.arete)+'</td><td>'+esc(g.tipo)+'</td><td>'+(g.fecha_nacimiento||'—')+'</td><td><span class="badge">'+esc(g.estado)+'</span></td><td>'+fmtMoney(gasto)+'</td>'+
+    const gasto = sum(state.movimientos.filter(m=>m.ganado_id===g.id && m.tipo==='costo'), m=>m.monto);
+    return '<tr><td>'+esc(g.arete)+'</td><td>'+esc(g.tipo)+'</td><td>'+fmtDate(g.fecha_nacimiento)+'</td><td><select data-estado="'+g.id+'">'+['Activo','Seco','Vendido'].map(e=>'<option'+(e===g.estado?' selected':'')+'>'+e+'</option>').join('')+'</select></td><td class="num">'+fmtMoney(gasto)+'</td>'+
       '<td><button class="btn-danger" data-del="'+g.id+'">Eliminar</button></td></tr>';
   }).join('');
   const listCard = card('Animales registrados', state.ganado.length ?
-    '<table><tr><th>Arete</th><th>Tipo</th><th>Nacimiento</th><th>Estado</th><th>Gasto total</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay animales registrados.</div>');
+    '<div class="table-wrap"><table><tr><th>Arete</th><th>Tipo</th><th>Nacimiento</th><th>Estado</th><th class="num">Gasto total</th><th></th></tr>'+rows+'</table></div>' : '<div class="empty">Todavía no hay animales registrados.</div>');
   main.appendChild(listCard);
-  document.getElementById('btn-add-ganado').addEventListener('click', async ()=>{
+  formCard.querySelector('#btn-add-ganado').addEventListener('click', async ()=>{
     const arete = val('g-arete');
     if(!arete){ showToast('Falta el arete o ID.'); return; }
     const row = await insertRow('ganado', {arete, tipo:val('g-tipo'), fecha_nacimiento:val('g-fnac')||null, estado:val('g-estado')});
     if(row){ state.ganado.push(row); render(); }
   });
-  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
-    const id = b.getAttribute('data-del');
-    if(await deleteRow('ganado', id)){ state.ganado = state.ganado.filter(g=>g.id!==id); render(); }
+  listCard.querySelectorAll('[data-estado]').forEach(sel=>sel.addEventListener('change', async ()=>{
+    const row = await updateRow('ganado', sel.getAttribute('data-estado'), {estado: sel.value});
+    if(row){ replaceInState('ganado', row); showToast('Estado actualizado.'); }
   }));
+  bindDelete(listCard, 'ganado');
 }
 
-// ---------- Costos e ingresos ----------
+// =====================================================================
+// Costos e ingresos
+// =====================================================================
 function renderMovimientos(main){
-  main.appendChild(titleBlock('Costos e ingresos','Registro de gastos y entradas de dinero'));
-  const parcelaOpts = '<option value="">—</option>' + state.parcelas.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');
-  const ganadoOpts = '<option value="">—</option>' + state.ganado.map(g=>'<option value="'+g.id+'">'+esc(g.arete)+' · '+esc(g.tipo)+'</option>').join('');
+  main.appendChild(titleBlock('Costos e ingresos','Gastos del día a día y entradas de dinero (las inversiones grandes van en "Inversión y ganancia")'));
+  const parcelaOpts = [{v:'',t:'—'}, ...state.parcelas.map(p=>({v:p.id,t:p.nombre}))];
+  const ganadoOpts = [{v:'',t:'—'}, ...state.ganado.map(g=>({v:g.id,t:g.arete+' · '+(g.tipo||'')}))];
   const formCard = card('Agregar movimiento', '<div class="form-row">'+
-    '<div class="field"><label>Tipo</label><select id="m-tipo"><option value="costo">Costo</option><option value="ingreso">Ingreso</option></select></div>' +
-    '<div class="field"><label>Área</label><select id="m-area"><option value="agricola">Agrícola</option><option value="ganaderia">Ganadería</option></select></div>' +
-    '<div class="field"><label>Categoría</label><select id="m-categoria"></select></div>' +
-    field('m-monto','Monto (S/)','number','150') + field('m-fecha','Fecha','date',todayISO()) +
-    '<div class="field"><label>Parcela (opcional)</label><select id="m-parcela">'+parcelaOpts+'</select></div>' +
-    '<div class="field"><label>Animal (opcional)</label><select id="m-ganado">'+ganadoOpts+'</select></div>' +
-    field('m-desc','Descripción','text','') + '<button class="btn-primary" id="btn-add-mov">Agregar</button></div>');
+    selectField('m-tipo','Tipo',[{v:'costo',t:'Costo'},{v:'ingreso',t:'Ingreso'}]) +
+    selectField('m-area','Área',[{v:'ganaderia',t:'Ganadería'},{v:'agricola',t:'Agrícola'}]) +
+    '<div class="field"><label for="m-categoria">Categoría</label><select id="m-categoria"></select></div>' +
+    field('m-monto','Monto (S/)','number','150') + field('m-fecha','Fecha','date','',todayISO()) +
+    selectField('m-parcela','Parcela (opcional)', parcelaOpts) + selectField('m-ganado','Animal (opcional)', ganadoOpts) +
+    field('m-desc','Descripción','text','') + '<button class="btn-primary" id="btn-add-mov">Agregar</button></div>'+
+    '<p class="subtle" style="margin:0">La venta de leche no se anota aquí: se calcula sola con el Registro diario.</p>');
   main.appendChild(formCard);
   function refreshCategorias(){
-    const cats = val('m-area')==='ganaderia' ? CATEGORIAS_GANADERIA : CATEGORIAS_AGRICOLA;
+    const cats = CATEGORIAS[val('m-area')][val('m-tipo')];
     document.getElementById('m-categoria').innerHTML = cats.map(c=>'<option>'+c+'</option>').join('');
   }
   refreshCategorias();
-  document.getElementById('m-area').addEventListener('change', refreshCategorias);
+  formCard.querySelector('#m-area').addEventListener('change', refreshCategorias);
+  formCard.querySelector('#m-tipo').addEventListener('change', refreshCategorias);
   const sorted = [...state.movimientos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   const rows = sorted.map(m=>{
-    const p = state.parcelas.find(pp=>pp.id===m.parcela_id);
-    const g = state.ganado.find(gg=>gg.id===m.ganado_id);
-    const ref = p ? p.nombre : (g ? g.arete : '—');
-    return '<tr><td>'+m.fecha+'</td><td><span class="badge" style="background:'+(m.tipo==='costo'?'var(--danger-light)':'var(--success-light)')+';color:'+(m.tipo==='costo'?'var(--danger)':'var(--success)')+'">'+(m.tipo==='costo'?'Costo':'Ingreso')+'</span></td><td>'+esc(m.area==='ganaderia'?'Ganadería':'Agrícola')+'</td><td>'+esc(m.categoria)+'</td><td>'+esc(ref)+'</td><td>'+fmtMoney(m.monto)+'</td>'+
+    const p = state.parcelas.find(pp=>pp.id===m.parcela_id), g = state.ganado.find(gg=>gg.id===m.ganado_id), h = state.hectareas.find(hh=>hh.id===m.hectarea_id);
+    const ref = p ? p.nombre+(h?' · Ha '+h.numero:'') : (g ? g.arete : '—');
+    return '<tr><td style="white-space:nowrap">'+fmtDate(m.fecha)+'</td><td><span class="badge '+(m.tipo==='costo'?'red':'green')+'">'+(m.tipo==='costo'?'Costo':'Ingreso')+'</span></td><td>'+(m.area==='ganaderia'?'Ganadería':'Agrícola')+'</td><td>'+esc(m.categoria)+'</td><td>'+esc(ref)+'</td><td>'+esc(m.descripcion||'')+'</td><td class="num">'+fmtMoney(m.monto)+'</td>'+
       '<td><button class="btn-danger" data-del="'+m.id+'">Eliminar</button></td></tr>';
   }).join('');
   const listCard = card('Movimientos registrados', state.movimientos.length ?
-    '<table><tr><th>Fecha</th><th>Tipo</th><th>Área</th><th>Categoría</th><th>Referencia</th><th>Monto</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay movimientos registrados.</div>');
+    '<div class="table-wrap"><table><tr><th>Fecha</th><th>Tipo</th><th>Área</th><th>Categoría</th><th>Referencia</th><th>Descripción</th><th class="num">Monto</th><th></th></tr>'+rows+'</table></div>' : '<div class="empty">Todavía no hay movimientos registrados.</div>');
   main.appendChild(listCard);
-  document.getElementById('btn-add-mov').addEventListener('click', async ()=>{
-    const monto = val('m-monto');
-    if(!monto || Number(monto)<=0){ showToast('Ingresa un monto válido.'); return; }
-    const row = await insertRow('movimientos', {tipo:val('m-tipo'), area:val('m-area'), categoria:val('m-categoria'), monto:Number(monto), fecha:val('m-fecha')||todayISO(), parcela_id:val('m-parcela')||null, ganado_id:val('m-ganado')||null, descripcion:val('m-desc')});
-    if(row){ state.movimientos.push(row); render(); }
+  formCard.querySelector('#btn-add-mov').addEventListener('click', async ()=>{
+    const monto = Number(val('m-monto'));
+    if(!(monto>0)){ showToast('Ingresa un monto válido.'); return; }
+    const row = await insertRow('movimientos', {tipo:val('m-tipo'), area:val('m-area'), categoria:val('m-categoria'), monto, fecha:val('m-fecha')||todayISO(), parcela_id:val('m-parcela')||null, ganado_id:val('m-ganado')||null, descripcion:val('m-desc')});
+    if(row){ state.movimientos.push(row); showToast('Guardado.'); render(); }
   });
-  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
-    const id = b.getAttribute('data-del');
-    if(await deleteRow('movimientos', id)){ state.movimientos = state.movimientos.filter(m=>m.id!==id); render(); }
-  }));
+  bindDelete(listCard, 'movimientos');
 }
 
-// ---------- Reportes ----------
+// =====================================================================
+// Reportes
+// =====================================================================
 function renderReportes(main){
   main.appendChild(titleBlock('Reportes','Costos vs ingresos y producción de leche por mes'));
   const byMonth = {};
   state.movimientos.forEach(m=>{ const k=m.fecha.slice(0,7); byMonth[k]=byMonth[k]||{costo:0,ingreso:0}; byMonth[k][m.tipo]+=Number(m.monto); });
   const months = Object.keys(byMonth).sort().slice(-6);
   const maxVal = Math.max(1, ...months.flatMap(m=>[byMonth[m].costo, byMonth[m].ingreso]));
-  const barsHtml = months.length ? '<div style="display:flex;gap:18px;align-items:flex-end">'+months.map(m=>{
+  const barsHtml = months.length ? '<div style="display:flex;gap:18px;align-items:flex-end;overflow-x:auto">'+months.map(m=>{
     const c = byMonth[m].costo, i = byMonth[m].ingreso;
     return '<div style="text-align:center"><div style="display:flex;align-items:flex-end;gap:5px;height:140px">'+
-      '<div style="width:20px;background:var(--danger);opacity:0.75;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(c/maxVal*130))+'px"></div>'+
-      '<div style="width:20px;background:var(--success);opacity:0.75;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(i/maxVal*130))+'px"></div>'+
-      '</div><div class="subtle" style="font-size:11px;margin-top:4px">'+m+'</div></div>';
+      '<div title="Costos '+fmtMoney(c)+'" style="width:20px;background:var(--danger);opacity:0.75;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(c/maxVal*130))+'px"></div>'+
+      '<div title="Ingresos '+fmtMoney(i)+'" style="width:20px;background:var(--success);opacity:0.75;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(i/maxVal*130))+'px"></div>'+
+      '</div><div class="subtle" style="font-size:11px;margin-top:4px">'+fmtYM(m)+'</div></div>';
   }).join('')+'</div>' : '';
   const legend = '<div style="display:flex;gap:16px;margin-top:14px;font-size:12.5px" class="subtle">'+
     '<span><span style="display:inline-block;width:10px;height:10px;background:var(--danger);opacity:0.75;border-radius:2px;margin-right:5px"></span>Costos</span>'+
@@ -381,148 +947,381 @@ function renderReportes(main){
   state.registros.forEach(r=>{ const k=r.fecha.slice(0,7); byMonthLeche[k]=(byMonthLeche[k]||0)+Number(r.litros); });
   const monthsL = Object.keys(byMonthLeche).sort().slice(-6);
   const maxL = Math.max(1, ...monthsL.map(m=>byMonthLeche[m]));
-  const lecheBars = monthsL.length ? '<div style="display:flex;gap:18px;align-items:flex-end">'+monthsL.map(m=>{
-    return '<div style="text-align:center"><div style="height:110px;display:flex;align-items:flex-end"><div style="width:26px;background:var(--accent);opacity:0.85;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(byMonthLeche[m]/maxL*100))+'px"></div></div><div class="subtle" style="font-size:11px;margin-top:4px">'+m+'</div><div style="font-size:11px;font-weight:600">'+fmtNum(byMonthLeche[m])+' L</div></div>';
-  }).join('')+'</div>' : '<div class="empty">Aún no hay registros de leche.</div>';
+  const lecheBars = monthsL.length ? '<div style="display:flex;gap:18px;align-items:flex-end;overflow-x:auto">'+monthsL.map(m=>
+    '<div style="text-align:center"><div style="height:110px;display:flex;align-items:flex-end;justify-content:center"><div style="width:26px;background:var(--accent);opacity:0.85;border-radius:4px 4px 0 0;height:'+Math.max(2,Math.round(byMonthLeche[m]/maxL*100))+'px"></div></div><div class="subtle" style="font-size:11px;margin-top:4px">'+fmtYM(m)+'</div><div style="font-size:11px;font-weight:600">'+fmtNum(byMonthLeche[m])+' L</div></div>'
+  ).join('')+'</div>' : '<div class="empty">Aún no hay registros de leche.</div>';
   main.appendChild(card('Producción de leche por mes', lecheBars));
 }
 
-// ---------- Resumen de leche por fecha ----------
+// =====================================================================
+// Control de leche
+// =====================================================================
+function miembros(grupo){ return (grupo.miembro_ids||[]).map(id=>persona(id)).filter(Boolean); }
+// Guarda litros; si ya existe ese turno, pregunta si reemplazar (evita duplicados)
+async function guardarLeche(grupoId, personaId, fecha, turno, litros, silencioso){
+  const ex = state.registros.find(r=>r.fecha===fecha && r.grupo_id===grupoId && r.persona_id===personaId && r.turno===turno);
+  if(ex){
+    const p = persona(personaId);
+    if(Number(ex.litros)===Number(litros)) return 'igual';
+    const ok = await askConfirm('Ya hay <b>'+fmtNum(ex.litros)+' L</b> de '+esc(p?p.nombre:'')+' en el turno '+turno+' del '+fmtDate(fecha)+'. ¿Cambiarlo por <b>'+fmtNum(litros)+' L</b>?', 'Sí, cambiar');
+    if(!ok) return 'cancel';
+    const row = await updateRow('registros', ex.id, {litros:Number(litros)});
+    if(row){ replaceInState('registros', row); return 'ok'; } return 'error';
+  }
+  const row = await insertRow('registros', {persona_id:personaId, grupo_id:grupoId, fecha, turno, litros:Number(litros)});
+  if(row){ state.registros.push(row); return 'ok'; } return 'error';
+}
 function renderResumenPorFecha(){
-  const fechas = [...new Set(state.registros.filter(r=>r.grupo_id==='g1'||r.grupo_id==='g2').map(r=>r.fecha))].sort();
-  const litrosCelda = (fecha, personaId, grupoId, turno) => {
-    const r = state.registros.find(x=>x.fecha===fecha && x.persona_id===personaId && x.grupo_id===grupoId && x.turno===turno);
-    return r ? Number(r.litros) : 0;
-  };
-  const dataRows = fechas.map(fecha=>{
-    const bM = litrosCelda(fecha,'barrios','g1','Mañana'), bT = litrosCelda(fecha,'barrios','g1','Tarde');
-    const vM = litrosCelda(fecha,'viviana','g1','Mañana'), vT = litrosCelda(fecha,'viviana','g1','Tarde');
-    const zM = litrosCelda(fecha,'zeballos','g1','Mañana'), zT = litrosCelda(fecha,'zeballos','g1','Tarde');
-    const mM = litrosCelda(fecha,'miguel','g2','Mañana'), mT = litrosCelda(fecha,'miguel','g2','Tarde');
-    return {fecha, bM, bT, vM, vT, zM, zT, totM:bM+vM+zM, totT:bT+vT+zT, mM, mT};
+  const cols = []; // [{grupo, persona}]
+  state.grupos.forEach(g=>miembros(g).forEach(p=>cols.push({g, p})));
+  const fechas = [...new Set(state.registros.map(r=>r.fecha))].sort().reverse().slice(0,31);
+  const L = (f, gid, pid, t) => sum(state.registros.filter(x=>x.fecha===f && x.grupo_id===gid && x.persona_id===pid && x.turno===t), x=>x.litros);
+  const data = fechas.map(f=>{
+    const celdas = cols.map(c=>[L(f,c.g.id,c.p.id,'Mañana'), L(f,c.g.id,c.p.id,'Tarde')]);
+    const totG = state.grupos.map(g=>{ let m=0,t=0; cols.forEach((c,i)=>{ if(c.g.id===g.id){ m+=celdas[i][0]; t+=celdas[i][1]; } }); return [m,t]; });
+    return {f, celdas, totG};
   });
-  const rows = dataRows.map(r=>{
-    const [y,m,d] = r.fecha.split('-');
-    return '<tr><td style="white-space:nowrap">'+d+'/'+m+'/'+y+'</td>'+
-      '<td style="text-align:right">'+r.bM+'</td><td style="text-align:right">'+r.bT+'</td>'+
-      '<td style="text-align:right">'+r.vM+'</td><td style="text-align:right">'+r.vT+'</td>'+
-      '<td style="text-align:right">'+r.zM+'</td><td style="text-align:right">'+r.zT+'</td>'+
-      '<td style="text-align:right;font-weight:600">'+r.totM+'</td><td style="text-align:right;font-weight:600">'+r.totT+'</td>'+
-      '<td style="text-align:right">'+r.mM+'</td><td style="text-align:right">'+r.mT+'</td></tr>';
+  let head1 = '<th rowspan="2">Fecha</th>', head2 = '';
+  state.grupos.forEach(g=>{
+    miembros(g).forEach(p=>{ head1 += '<th colspan="2" style="text-align:center">'+esc(p.nombre)+'<br><span class="subtle" style="font-size:11px">'+esc(g.nombre)+'</span></th>'; head2 += '<th class="num">Mañ.</th><th class="num">Tarde</th>'; });
+    head1 += '<th colspan="2" style="text-align:center;background:var(--primary-light)">Total<br><span class="subtle" style="font-size:11px">'+esc(g.nombre)+'</span></th>'; head2 += '<th class="num" style="background:var(--primary-light)">Mañ.</th><th class="num" style="background:var(--primary-light)">Tarde</th>';
+  });
+  const rows = data.map(r=>{
+    let tds = '<td style="white-space:nowrap">'+fmtDate(r.f)+'</td>'; let i=0;
+    state.grupos.forEach((g,gi)=>{ miembros(g).forEach(()=>{ tds += '<td class="num">'+fmtNum(r.celdas[i][0])+'</td><td class="num">'+fmtNum(r.celdas[i][1])+'</td>'; i++; }); tds += '<td class="num" style="font-weight:600;background:#F4F7EF">'+fmtNum(r.totG[gi][0])+'</td><td class="num" style="font-weight:600;background:#F4F7EF">'+fmtNum(r.totG[gi][1])+'</td>'; });
+    return '<tr>'+tds+'</tr>';
   }).join('');
-  const table = fechas.length ? '<div style="overflow-x:auto"><table style="min-width:820px"><tr>'+
-    '<th rowspan="2">Fecha</th><th colspan="2" style="text-align:center">Barrios</th><th colspan="2" style="text-align:center">Viviana</th><th colspan="2" style="text-align:center">Zeballos</th><th colspan="2" style="text-align:center">Total</th><th colspan="2" style="text-align:center">Miguel</th>'+
-    '</tr><tr><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th><th style="text-align:right">Mañana</th><th style="text-align:right">Tarde</th></tr>'+
-    rows+'</table></div>' : '<div class="empty">Todavía no hay registros.</div>';
-  const c = card('Registros por fecha', (fechas.length ? '<div style="margin-bottom:10px"><button class="btn-ghost" id="btn-exportar-leche">Exportar a Excel</button></div>' : '') + table);
+  const table = fechas.length ? '<div class="table-wrap"><table style="min-width:'+(120+cols.length*110+state.grupos.length*110)+'px"><tr>'+head1+'</tr><tr>'+head2+'</tr>'+rows+'</table></div>' : '<div class="empty">Todavía no hay registros.</div>';
+  const c = card('Registros por fecha (últimos 31 días con datos)', (fechas.length ? '<div style="margin-bottom:10px"><button class="btn-ghost" id="btn-exportar-leche">Exportar a Excel</button></div>' : '') + table);
   if(fechas.length){
     c.querySelector('#btn-exportar-leche').addEventListener('click', ()=>{
-      const header = ['Fecha','Barrios Mañana','Barrios Tarde','Viviana Mañana','Viviana Tarde','Zeballos Mañana','Zeballos Tarde','Total Mañana','Total Tarde','Miguel Mañana','Miguel Tarde'];
-      const aoa = [header, ...dataRows.map(r=>[r.fecha, r.bM, r.bT, r.vM, r.vT, r.zM, r.zT, r.totM, r.totT, r.mM, r.mT])];
-      const ws = XLSX.utils.aoa_to_sheet(aoa);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Leche diaria');
+      const todas = [...new Set(state.registros.map(r=>r.fecha))].sort();
+      const header = ['Fecha']; state.grupos.forEach(g=>{ miembros(g).forEach(p=>header.push(p.nombre+' ('+g.nombre+') Mañana', p.nombre+' ('+g.nombre+') Tarde')); header.push('Total '+g.nombre+' Mañana','Total '+g.nombre+' Tarde'); });
+      const aoa = [header, ...todas.map(f=>{ const row=[f]; state.grupos.forEach(g=>{ let tm=0,tt=0; miembros(g).forEach(p=>{ const m=L(f,g.id,p.id,'Mañana'), t=L(f,g.id,p.id,'Tarde'); tm+=m; tt+=t; row.push(m,t); }); row.push(tm,tt); }); return row; })];
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), 'Leche diaria');
       XLSX.writeFile(wb, 'leche-diaria-fundo-ashwin.xlsx');
     });
   }
   return c;
 }
-
-// ---------- Registro diario ----------
 function renderRegistro(main){
   main.appendChild(titleBlock('Registro diario','Litros entregados por persona y turno'));
+  const tDef = turnoActual();
   state.grupos.forEach(grupo=>{
-    const miembros = grupo.miembro_ids.map(id=>state.personas.find(p=>p.id===id)).filter(Boolean);
-    const rowsForm = miembros.map(p=>
+    const ms = miembros(grupo);
+    const rowsForm = ms.map(p=>
       '<div class="form-row" style="margin-bottom:6px">'+
-      '<div class="field" style="min-width:90px"><label>&nbsp;</label><div style="padding-top:6px">'+esc(p.nombre)+'</div></div>'+
-      '<div class="field"><label>Turno</label><select id="turno-'+grupo.id+'-'+p.id+'"><option>Mañana</option><option>Tarde</option></select></div>'+
-      '<div class="field"><label>Litros</label><input type="number" id="litros-'+grupo.id+'-'+p.id+'" placeholder="0" style="width:90px"></div></div>'
+      '<div class="field" style="min-width:90px"><label>&nbsp;</label><div style="padding-top:6px;font-weight:600">'+esc(p.nombre)+'</div></div>'+
+      selectField('turno-'+grupo.id+'-'+p.id,'Turno',['Mañana','Tarde'],tDef)+
+      '<div class="field"><label>Litros</label><input type="number" inputmode="decimal" step="any" id="litros-'+grupo.id+'-'+p.id+'" placeholder="0" style="width:100px;min-width:100px"></div></div>'
     ).join('');
-    const c = card(grupo.nombre + ' · ' + miembros.map(m=>m.nombre).join(', '),
-      '<div class="form-row" style="margin-bottom:10px">'+field('fecha-'+grupo.id,'Fecha','date',todayISO())+'</div>'+rowsForm+
+    const c = card(esc(grupo.nombre) + ' · ' + ms.map(m=>esc(m.nombre)).join(', '),
+      '<div class="form-row" style="margin-bottom:10px">'+field('fecha-'+grupo.id,'Fecha','date','',todayISO())+'</div>'+rowsForm+
       '<button class="btn-primary" data-guardar="'+grupo.id+'" style="margin-top:8px">Guardar registro del día</button>');
     main.appendChild(c);
     c.querySelector('[data-guardar]').addEventListener('click', async ()=>{
       const fecha = val('fecha-'+grupo.id) || todayISO();
-      let added = 0;
-      for(const p of miembros){
+      if(fecha > todayISO()){ showToast('La fecha no puede ser futura.'); return; }
+      let added = 0, hubo = 0;
+      for(const p of ms){
         const litros = val('litros-'+grupo.id+'-'+p.id);
-        const turno = val('turno-'+grupo.id+'-'+p.id);
-        if(litros && Number(litros)>0){
-          const row = await insertRow('registros', {persona_id:p.id, grupo_id:grupo.id, fecha, turno, litros:Number(litros)});
-          if(row){ state.registros.push(row); added++; }
-        }
+        if(litros && Number(litros)>0){ hubo++; const r = await guardarLeche(grupo.id, p.id, fecha, val('turno-'+grupo.id+'-'+p.id), Number(litros)); if(r==='ok'||r==='igual') added++; }
       }
-      if(!added){ showToast('Ingresa al menos un valor de litros.'); return; }
-      showToast('Registro guardado.'); render();
+      if(!hubo){ showToast('Ingresa al menos un valor de litros.'); return; }
+      if(added) showToast('Registro guardado.'); render();
     });
   });
+  if(!state.grupos.length) main.appendChild(card('', '<div class="empty">No hay grupos configurados en la base de datos.</div>'));
   main.appendChild(renderResumenPorFecha());
 
   const recent = [...state.registros].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,15);
   const rows = recent.map(r=>{
-    const p = state.personas.find(pp=>pp.id===r.persona_id);
-    const g = state.grupos.find(gg=>gg.id===r.grupo_id);
-    return '<tr><td>'+r.fecha+'</td><td>'+esc(g?g.nombre:'—')+'</td><td>'+esc(p?p.nombre:'—')+'</td><td>'+esc(r.turno)+'</td><td>'+fmtNum(r.litros)+' L</td>'+
+    const p = persona(r.persona_id), g = state.grupos.find(gg=>gg.id===r.grupo_id);
+    return '<tr><td>'+fmtDate(r.fecha)+'</td><td>'+esc(g?g.nombre:'—')+'</td><td>'+esc(p?p.nombre:'—')+'</td><td>'+esc(r.turno)+'</td><td class="num">'+fmtNum(r.litros)+' L</td>'+
       '<td><button class="btn-danger" data-del="'+r.id+'">Eliminar</button></td></tr>';
   }).join('');
   const listCard = card('Últimos registros', state.registros.length ?
-    '<table><tr><th>Fecha</th><th>Grupo</th><th>Persona</th><th>Turno</th><th>Litros</th><th></th></tr>'+rows+'</table>' : '<div class="empty">Todavía no hay registros.</div>');
+    '<div class="table-wrap"><table><tr><th>Fecha</th><th>Grupo</th><th>Persona</th><th>Turno</th><th class="num">Litros</th><th></th></tr>'+rows+'</table></div>' : '<div class="empty">Todavía no hay registros.</div>');
   main.appendChild(listCard);
-  listCard.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
-    const id = b.getAttribute('data-del');
-    if(await deleteRow('registros', id)){ state.registros = state.registros.filter(r=>r.id!==id); render(); }
-  }));
+  bindDelete(listCard, 'registros');
 }
-
-// ---------- Liquidación quincenal ----------
 function renderLiquidacion(main){
   main.appendChild(titleBlock('Liquidación quincenal','Lo cobrado por grupo vs. lo pagado a cada persona'));
-  const today = new Date();
-  const defaultStart = new Date(today); defaultStart.setDate(today.getDate()-14);
-  const startId='liq-start', endId='liq-end';
+  const hoy = todayISO();
+  const qDef = Number(hoy.slice(8,10))<=15 ? '1' : '2';
   const rangeCard = card('Periodo', '<div class="form-row">'+
-    field(startId,'Desde','date', defaultStart.toISOString().slice(0,10)) + field(endId,'Hasta','date', todayISO()) +
-    '<button class="btn-primary" id="btn-calcular">Calcular</button></div>');
+    field('liq-mes','Mes','month','',hoy.slice(0,7)) +
+    selectField('liq-q','Quincena',[{v:'1',t:'1.ª quincena (1 al 15)'},{v:'2',t:'2.ª quincena (16 a fin de mes)'}], qDef) +
+    '<button class="btn-ghost" id="btn-exp-liq">Exportar a Excel</button></div><p class="subtle" id="liq-rango" style="margin:0"></p>');
   main.appendChild(rangeCard);
-  const resultsWrap = document.createElement('div');
-  main.appendChild(resultsWrap);
+  const resultsWrap = document.createElement('div'); main.appendChild(resultsWrap);
+  let ultimo = [];
+  function rango(){
+    const ym = val('liq-mes') || hoy.slice(0,7); const [ini, fin] = monthBounds(ym);
+    return val('liq-q')==='1' ? [ini, ym+'-15'] : [ym+'-16', fin];
+  }
   function calcular(){
-    const start = val(startId), end = val(endId);
-    resultsWrap.innerHTML = '';
+    const [start, end] = rango();
+    document.getElementById('liq-rango').textContent = 'Del '+fmtDate(start)+' al '+fmtDate(end)+(end>hoy?' (quincena en curso)':'');
+    resultsWrap.innerHTML = ''; ultimo = [];
     state.grupos.forEach(grupo=>{
-      const miembros = grupo.miembro_ids.map(id=>state.personas.find(p=>p.id===id)).filter(Boolean);
+      const ms = miembros(grupo);
       const regs = state.registros.filter(r=>r.grupo_id===grupo.id && r.fecha>=start && r.fecha<=end);
-      const litrosTotal = regs.reduce((s,r)=>s+Number(r.litros),0);
-      const precioVenta = grupo.precio_venta_base * 1.18;
+      const litrosTotal = sum(regs, r=>r.litros);
+      const precioVenta = Number(grupo.precio_venta_base) * 1.18;
       const totalVenta = litrosTotal * precioVenta;
-      const porPersona = miembros.map(p=>{
-        const litros = regs.filter(r=>r.persona_id===p.id).reduce((s,r)=>s+Number(r.litros),0);
-        return {persona:p, litros, pago: litros*p.precio};
-      });
-      const totalPagado = porPersona.reduce((s,x)=>s+x.pago,0);
+      const porPersona = ms.map(p=>{ const litros = sum(regs.filter(r=>r.persona_id===p.id), r=>r.litros); return {persona:p, litros, pago: litros*Number(p.precio)}; });
+      const totalPagado = sum(porPersona, x=>x.pago);
       const margen = totalVenta - totalPagado;
-      const rows = porPersona.map(x=>'<tr><td>'+esc(x.persona.nombre)+'</td><td style="text-align:right">'+fmtNum(x.litros)+' L</td><td style="text-align:right">'+fmtMoney(x.persona.precio)+'</td><td style="text-align:right">'+fmtMoney(x.pago)+'</td></tr>').join('');
-      const html = '<p class="subtle" style="margin-bottom:12px">Precio de venta al comprador: '+fmtMoney(grupo.precio_venta_base)+' + IGV (18%) = '+fmtMoney(precioVenta)+'/L</p>'+
-        '<div class="grid grid-3" style="margin-bottom:14px">'+ metric('Litros del periodo', fmtNum(litrosTotal)+' L') + metric('Cobrado al comprador', fmtMoney(totalVenta), 'accent') + metric('Margen del negocio', fmtMoney(margen), margen>=0?'success':'') + '</div>'+
-        (porPersona.length ? '<table><tr><th>Persona</th><th style="text-align:right">Litros</th><th style="text-align:right">Precio/L</th><th style="text-align:right">A liquidar</th></tr>'+rows+'</table>' : '<div class="empty">Sin registros en este periodo.</div>');
-      resultsWrap.appendChild(card(grupo.nombre + ' · ' + miembros.map(m=>m.nombre).join(', '), html));
+      ultimo.push({grupo, porPersona, litrosTotal, precioVenta, totalVenta, margen});
+      const rows = porPersona.map(x=>'<tr><td>'+esc(x.persona.nombre)+'</td><td class="num">'+fmtNum(x.litros)+' L</td><td class="num">'+fmtMoney(x.persona.precio)+'</td><td class="num">'+fmtMoney(x.pago)+'</td></tr>').join('');
+      const html = '<p class="subtle" style="margin:-4px 0 12px">Precio de venta al comprador: '+fmtMoney(grupo.precio_venta_base)+' + IGV (18%) = '+fmtMoney(precioVenta)+'/L</p>'+
+        '<div class="grid grid-3" style="margin-bottom:14px">'+ metric('Litros del periodo', fmtNum(litrosTotal)+' L') + metric('Cobrado al comprador', fmtMoney(totalVenta), 'accent', 'Incluye IGV') + metric('Margen (con IGV)', fmtMoney(margen), margen>=0?'success':'danger', 'Del IGV cobrado, '+fmtMoney(totalVenta-totalVenta/1.18)+' es para SUNAT') + '</div>'+
+        (porPersona.length ? '<div class="table-wrap"><table><tr><th>Persona</th><th class="num">Litros</th><th class="num">Precio/L</th><th class="num">A liquidar</th></tr>'+rows+'</table></div>' : '<div class="empty">Sin registros en este periodo.</div>');
+      resultsWrap.appendChild(card(esc(grupo.nombre) + ' · ' + ms.map(m=>esc(m.nombre)).join(', '), html));
     });
   }
-  document.getElementById('btn-calcular').addEventListener('click', calcular);
+  rangeCard.querySelector('#liq-mes').addEventListener('change', calcular);
+  rangeCard.querySelector('#liq-q').addEventListener('change', calcular);
+  rangeCard.querySelector('#btn-exp-liq').addEventListener('click', ()=>{
+    const [s,e] = rango();
+    const aoa = [['Liquidación Fundo Ashwin', 'Del '+s+' al '+e], []];
+    ultimo.forEach(u=>{
+      aoa.push([u.grupo.nombre], ['Persona','Litros','Precio/L','A liquidar']);
+      u.porPersona.forEach(x=>aoa.push([x.persona.nombre, x.litros, Number(x.persona.precio), Math.round(x.pago*100)/100]));
+      aoa.push(['Total litros', u.litrosTotal], ['Cobrado al comprador (con IGV)', Math.round(u.totalVenta*100)/100], ['Margen', Math.round(u.margen*100)/100], []);
+    });
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), 'Liquidación');
+    XLSX.writeFile(wb, 'liquidacion-'+s+'-al-'+e+'.xlsx');
+  });
   calcular();
 }
 
-// ---------- boot ----------
-(async function(){
-  if(!sb){
-    document.getElementById('main').innerHTML = '<div class="config-banner">Falta conectar la base de datos: abre este archivo, busca <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> cerca del inicio, y pega ahí los datos de tu proyecto de Supabase (Settings → API).</div>';
+// =====================================================================
+// MODO FÁCIL (para personas mayores): una pregunta por pantalla, botones grandes
+// =====================================================================
+let easy = {flow:null, step:0, d:{}};
+function easyGo(flow, step, patch){ easy.flow = flow; easy.step = step; Object.assign(easy.d, patch||{}); render(); window.scrollTo(0,0); }
+function bigBtn(attr, ico, text, sub, extraCls){ return '<button class="big-btn '+(extraCls||'')+'" '+attr+'>'+(ico?'<span class="ico">'+ico+'</span>':'')+'<span>'+text+(sub?'<small>'+sub+'</small>':'')+'</span></button>'; }
+function easyHeader(paso, total, pregunta){
+  return '<button class="easy-back" id="e-back">← Atrás</button>'+(total?'<div class="easy-step">Paso '+paso+' de '+total+'</div>':'')+'<div class="easy-q">'+pregunta+'</div>';
+}
+function numPad(id, unidad, valor, pasos){
+  return '<input class="num-input" id="'+id+'" type="number" inputmode="decimal" step="any" min="0" placeholder="0" value="'+(valor||'')+'">'+
+    '<div style="text-align:center;font-size:20px;color:var(--muted);margin-top:6px">'+unidad+'</div>'+
+    '<div class="stepper">'+pasos.map(n=>'<button data-step="'+n+'">'+(n>0?'+':'')+n+'</button>').join('')+'</div>';
+}
+function bindNumPad(w, id){
+  const inp = w.querySelector('#'+id);
+  w.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click', ()=>{ const v = Math.max(0, (Number(inp.value)||0) + Number(b.getAttribute('data-step'))); inp.value = Math.round(v*100)/100; }));
+  setTimeout(()=>inp.focus(), 50);
+  return inp;
+}
+function renderFacil(main){
+  const w = document.createElement('div'); w.className='easy-wrap'; main.appendChild(w);
+  const hoy = todayISO();
+  const back = (fn)=>{ const b = w.querySelector('#e-back'); if(b) b.addEventListener('click', fn); };
+  const f = easy.flow, s = easy.step, d = easy.d;
+
+  if(!f){
+    w.innerHTML = '<div class="easy-q">Hola 👋<br>¿Qué quieres anotar hoy?</div><p style="font-size:18px;color:var(--muted);margin-top:-8px">Hoy es '+fmtDate(hoy)+'</p>'+
+      bigBtn('data-f="leche"','🥛','Leche','Litros de la mañana o la tarde')+
+      bigBtn('data-f="gasto"','💵','Un gasto','Comida, medicina, luz, semillas…')+
+      bigBtn('data-f="campo"','🌱','Trabajo en el campo','Riego, siembra, abono, cosecha…')+
+      '<button class="btn-link" id="e-exit" style="font-size:16px;margin-top:16px">Ir al modo completo</button>';
+    w.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click', ()=>{ easy.d = {}; easyGo(b.getAttribute('data-f'), 1); }));
+    w.querySelector('#e-exit').addEventListener('click', ()=>go('dashboard'));
     return;
   }
+  if(s==='ok'){
+    w.innerHTML = '<div class="easy-ok"><div class="ico">✅</div><h2>¡Guardado!</h2>'+bigBtn('id="e-otro"','➕','Anotar otro','','primary')+bigBtn('id="e-fin"','🏠','Terminar','')+'</div>';
+    w.querySelector('#e-otro').addEventListener('click', ()=>{ easy.d = {}; easyGo(f, 1); });
+    w.querySelector('#e-fin').addEventListener('click', ()=>{ easy = {flow:null, step:0, d:{}}; render(); });
+    return;
+  }
+
+  // ---------- LECHE ----------
+  if(f==='leche'){
+    const T = 4;
+    if(s===1){
+      const opciones = []; state.grupos.forEach(g=>miembros(g).forEach(p=>opciones.push({g,p})));
+      const repetidos = {}; opciones.forEach(o=>repetidos[o.p.id]=(repetidos[o.p.id]||0)+1);
+      w.innerHTML = easyHeader(1,T,'¿De quién es la leche?') + (opciones.length ? opciones.map((o,i)=>{
+        const ya = state.registros.filter(r=>r.fecha===hoy && r.grupo_id===o.g.id && r.persona_id===o.p.id);
+        return bigBtn('data-i="'+i+'"','🧑‍🌾', esc(o.p.nombre)+(repetidos[o.p.id]>1?' · '+esc(o.g.nombre):''), ya.length?'Hoy ya anotó: '+ya.map(r=>r.turno+' '+fmtNum(r.litros)+' L').join(', '):'Hoy todavía no anota');
+      }).join('') : '<div class="empty">No hay personas configuradas.</div>');
+      back(()=>{ easy={flow:null,step:0,d:{}}; render(); });
+      w.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click', ()=>{ const o = opciones[Number(b.getAttribute('data-i'))]; easyGo('leche', 2, {grupoId:o.g.id, personaId:o.p.id}); }));
+    } else if(s===2){
+      w.innerHTML = easyHeader(2,T,'¿De qué turno?') + '<div class="big-row">'+bigBtn('data-t="Mañana"','☀️','Mañana','', turnoActual()==='Mañana'?'sel':'')+bigBtn('data-t="Tarde"','🌇','Tarde','', turnoActual()==='Tarde'?'sel':'')+'</div>';
+      back(()=>easyGo('leche',1));
+      w.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click', ()=>easyGo('leche', 3, {turno:b.getAttribute('data-t')})));
+    } else if(s===3){
+      const p = persona(d.personaId);
+      w.innerHTML = easyHeader(3,T,'¿Cuántos litros entregó '+esc(p?p.nombre:'')+'?') + numPad('e-num','litros', d.litros, [-1,1,5,10]) + bigBtn('id="e-next"','','Siguiente →','','primary');
+      back(()=>easyGo('leche',2));
+      const inp = bindNumPad(w, 'e-num');
+      w.querySelector('#e-next').addEventListener('click', ()=>{ const v = Number(inp.value); if(!(v>0)){ showToast('Escribe cuántos litros.'); return; } if(v>2000){ showToast('Ese número parece muy alto. Revísalo.'); return; } easyGo('leche', 4, {litros:v}); });
+    } else if(s===4){
+      const p = persona(d.personaId), g = state.grupos.find(x=>x.id===d.grupoId);
+      w.innerHTML = easyHeader(4,T,'¿Está bien así?') + '<div class="easy-summary">🧑‍🌾 <b>'+esc(p?p.nombre:'')+'</b> ('+esc(g?g.nombre:'')+')<br>'+(d.turno==='Mañana'?'☀️':'🌇')+' Turno <b>'+d.turno+'</b><br>🥛 <b>'+fmtNum(d.litros)+' litros</b><br>📅 Hoy, '+fmtDate(hoy)+'</div>'+
+        bigBtn('id="e-save"','✔️','Sí, guardar','','primary') + bigBtn('id="e-fix"','✏️','Corregir los litros','');
+      back(()=>easyGo('leche',3));
+      w.querySelector('#e-fix').addEventListener('click', ()=>easyGo('leche',3));
+      w.querySelector('#e-save').addEventListener('click', async (ev)=>{ ev.currentTarget.disabled = true; const r = await guardarLeche(d.grupoId, d.personaId, hoy, d.turno, d.litros); if(r==='ok'||r==='igual') easyGo('leche','ok'); else render(); });
+    }
+    return;
+  }
+
+  // ---------- GASTO ----------
+  if(f==='gasto'){
+    const T = 4;
+    if(s===1){
+      w.innerHTML = easyHeader(1,T,'¿Para qué fue el gasto?') + bigBtn('data-a="ganaderia"','🐄','Para las vacas','Ganadería') + bigBtn('data-a="agricola"','🌾','Para la chacra','Agrícola');
+      back(()=>{ easy={flow:null,step:0,d:{}}; render(); });
+      w.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click', ()=>easyGo('gasto', 2, {area:b.getAttribute('data-a')})));
+    } else if(s===2){
+      const ico = {'Alimentación':'🌽','Luz':'💡','Agua':'🚰','Vitaminas':'💊','Medicinas':'💉','Veterinario':'🩺','Mano de obra':'👷','Semillas':'🌱','Riego':'💧','Fertilizante':'🧪','Fumigación':'🧴','Maquinaria':'🚜','Transporte':'🚚','Otro':'📝'};
+      w.innerHTML = easyHeader(2,T,'¿En qué se gastó?') + CATEGORIAS[d.area].costo.map(c=>bigBtn('data-c="'+esc(c)+'"', ico[c]||'📝', c)).join('');
+      back(()=>easyGo('gasto',1));
+      w.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click', ()=>easyGo('gasto', 3, {categoria:b.getAttribute('data-c')})));
+    } else if(s===3){
+      w.innerHTML = easyHeader(3,T,'¿Cuánto costó?') + numPad('e-num','soles (S/)', d.monto, [-10,10,50,100]) +
+        '<div class="field" style="margin-bottom:14px"><label for="e-desc" style="font-size:16px">Nota (opcional)</label><input id="e-desc" type="text" style="font-size:18px;padding:12px" placeholder="Ej. 2 sacos de afrecho" value="'+esc(d.desc||'')+'"></div>' + bigBtn('id="e-next"','','Siguiente →','','primary');
+      back(()=>easyGo('gasto',2));
+      const inp = bindNumPad(w, 'e-num');
+      w.querySelector('#e-next').addEventListener('click', ()=>{ const v = Number(inp.value); if(!(v>0)){ showToast('Escribe cuánto costó.'); return; } easyGo('gasto', 4, {monto:v, desc:val('e-desc')}); });
+    } else if(s===4){
+      w.innerHTML = easyHeader(4,T,'¿Está bien así?') + '<div class="easy-summary">'+(d.area==='ganaderia'?'🐄 Vacas':'🌾 Chacra')+'<br>🧾 <b>'+esc(d.categoria)+'</b>'+(d.desc?' · '+esc(d.desc):'')+'<br>💵 <b>'+fmtMoney(d.monto)+'</b><br>📅 Hoy, '+fmtDate(hoy)+'</div>'+
+        bigBtn('id="e-save"','✔️','Sí, guardar','','primary') + bigBtn('id="e-fix"','✏️','Corregir el monto','');
+      back(()=>easyGo('gasto',3));
+      w.querySelector('#e-fix').addEventListener('click', ()=>easyGo('gasto',3));
+      w.querySelector('#e-save').addEventListener('click', async (ev)=>{ ev.currentTarget.disabled = true;
+        const row = await insertRow('movimientos', {tipo:'costo', area:d.area, categoria:d.categoria, monto:d.monto, fecha:hoy, descripcion:d.desc||null});
+        if(row){ state.movimientos.push(row); easyGo('gasto','ok'); } else render(); });
+    }
+    return;
+  }
+
+  // ---------- CAMPO ----------
+  if(f==='campo'){
+    const cosecha = d.tipo==='Cosecha';
+    const T = cosecha ? 6 : 5;
+    if(s===1){
+      w.innerHTML = easyHeader(1,T,'¿En qué parcela?') + (state.parcelas.length ? state.parcelas.map(p=>bigBtn('data-p="'+p.id+'"','🗺️',esc(p.nombre), hectareasDe(p.id).length+' hectáreas')).join('') : '<div class="empty">No hay parcelas registradas.</div>');
+      back(()=>{ easy={flow:null,step:0,d:{}}; render(); });
+      w.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click', ()=>{
+        const pid = b.getAttribute('data-p');
+        if(!hectareasDe(pid).length){ showToast('Esta parcela aún no tiene hectáreas. Créalas en el modo completo.'); return; }
+        easyGo('campo', 2, {parcelaId:pid});
+      }));
+    } else if(s===2){
+      w.innerHTML = easyHeader(2,T,'¿En qué hectárea?') + '<div class="big-row">'+hectareasDe(d.parcelaId).map(h=>{ const sa=siembraActiva(h.id); return bigBtn('data-h="'+h.id+'"','','Hectárea '+h.numero, sa?esc(sa.cultivo):'Libre'); }).join('')+'</div>';
+      back(()=>easyGo('campo',1));
+      w.querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click', ()=>easyGo('campo', 3, {hectareaId:b.getAttribute('data-h')})));
+    } else if(s===3){
+      w.innerHTML = easyHeader(3,T,'¿Qué trabajo se hizo?') + '<div class="big-row">'+TIPOS_LABOR.map(t=>bigBtn('data-t="'+esc(t)+'"', ICONO_LABOR[t], t)).join('')+'</div>';
+      back(()=>easyGo('campo',2));
+      w.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click', ()=>easyGo('campo', 4, {tipo:b.getAttribute('data-t')})));
+    } else if(s===4){
+      w.innerHTML = easyHeader(4,T,'¿Cuánto costó este trabajo?') + numPad('e-num','soles (S/)', d.costo, [-10,10,50,100]) +
+        '<div class="field" style="margin-bottom:14px"><label for="e-desc" style="font-size:16px">Nota (opcional)</label><input id="e-desc" type="text" style="font-size:18px;padding:12px" placeholder="Ej. Urea 2 sacos" value="'+esc(d.desc||'')+'"></div>' +
+        bigBtn('id="e-next"','','Siguiente →','','primary') + bigBtn('id="e-cero"','🆓','No costó nada','');
+      back(()=>easyGo('campo',3));
+      const inp = bindNumPad(w, 'e-num');
+      const sig = (v)=>easyGo('campo', 5, {costo:v, desc:val('e-desc')});
+      w.querySelector('#e-next').addEventListener('click', ()=>sig(Number(inp.value)||0));
+      w.querySelector('#e-cero').addEventListener('click', ()=>sig(0));
+    } else if(s===5 && cosecha && easy.d.kg===undefined){
+      w.innerHTML = easyHeader(5,T,'¿Cuántos kilos se cosecharon?') + numPad('e-num','kilos (kg)', '', [-10,10,50,100]) +
+        '<div class="field" style="margin-bottom:14px"><label for="e-venta" style="font-size:16px">¿En cuánto se vendió? (S/, opcional)</label><input id="e-venta" type="number" inputmode="decimal" style="font-size:22px;padding:12px" placeholder="0"></div>' + bigBtn('id="e-next"','','Siguiente →','','primary');
+      back(()=>easyGo('campo',4));
+      const inp = bindNumPad(w, 'e-num');
+      w.querySelector('#e-next').addEventListener('click', ()=>easyGo('campo', 6, {kg:Number(inp.value)||0, venta:Number(val('e-venta'))||0}));
+    } else {
+      const h = state.hectareas.find(x=>x.id===d.hectareaId), p = state.parcelas.find(x=>x.id===d.parcelaId);
+      w.innerHTML = easyHeader(T,T,'¿Está bien así?') + '<div class="easy-summary">🗺️ <b>'+esc(p?p.nombre:'')+'</b> · Hectárea '+(h?h.numero:'')+'<br>'+ICONO_LABOR[d.tipo]+' <b>'+esc(d.tipo)+'</b>'+(d.desc?' · '+esc(d.desc):'')+'<br>💵 Costo: <b>'+(d.costo>0?fmtMoney(d.costo):'nada')+'</b>'+
+        (cosecha?'<br>🌾 <b>'+fmtNum(d.kg)+' kg</b>'+(d.venta>0?' · vendido en '+fmtMoney(d.venta):''):'')+'<br>📅 Hoy, '+fmtDate(hoy)+'</div>'+
+        bigBtn('id="e-save"','✔️','Sí, guardar','','primary') + bigBtn('id="e-fix"','✏️','Corregir','');
+      back(()=>{ if(cosecha){ delete easy.d.kg; easyGo('campo',5); } else easyGo('campo',4); });
+      w.querySelector('#e-fix').addEventListener('click', ()=>{ delete easy.d.kg; easyGo('campo',4); });
+      w.querySelector('#e-save').addEventListener('click', async (ev)=>{ ev.currentTarget.disabled = true;
+        const ok = await guardarLabor({hectarea:h, tipo:d.tipo, fecha:hoy, detalle:d.desc, cantidad: cosecha ? d.kg : '', unidad: cosecha ? 'kg' : null, costo:d.costo, ingreso: cosecha ? d.venta : 0});
+        if(ok) easyGo('campo','ok'); else render(); });
+    }
+    return;
+  }
+}
+
+// =====================================================================
+// Inicio de sesión
+// =====================================================================
+function renderLogin(msg){
+  document.body.classList.add('locked');
+  const main = document.getElementById('main');
+  main.innerHTML = '<div class="login-wrap"><div class="card" style="padding:28px">'+
+    '<h1 style="font-size:26px;margin-bottom:4px">Fundo Ashwin</h1><p class="subtle" style="margin:0 0 20px">Ingresa con tu correo y contraseña</p>'+
+    (msg?'<div class="banner" style="margin-bottom:14px">'+msg+'</div>':'')+
+    '<div class="field"><label for="lg-email">Correo</label><input id="lg-email" type="email" autocomplete="username"></div>'+
+    '<div class="field"><label for="lg-pass">Contraseña</label><input id="lg-pass" type="password" autocomplete="current-password"></div>'+
+    '<button class="btn-primary" id="lg-btn">Entrar</button>'+
+    '<p style="text-align:center;margin:14px 0 0"><button class="btn-link" id="lg-olvide">Olvidé mi contraseña</button></p></div></div>';
+  const enviar = async ()=>{
+    const email = val('lg-email'), password = document.getElementById('lg-pass').value;
+    if(!email || !password){ showToast('Escribe tu correo y contraseña.'); return; }
+    const b = document.getElementById('lg-btn'); b.disabled = true; b.textContent = 'Entrando…';
+    const { data, error } = await sb.auth.signInWithPassword({email, password});
+    if(error){ renderLogin('Correo o contraseña incorrectos.'); return; }
+    start(data.session);
+  };
+  document.getElementById('lg-btn').addEventListener('click', enviar);
+  document.getElementById('lg-olvide').addEventListener('click', async ()=>{
+    const email = val('lg-email');
+    if(!email){ showToast('Primero escribe tu correo arriba.'); return; }
+    const { error } = await sb.auth.resetPasswordForEmail(email, {redirectTo: location.origin + location.pathname});
+    if(error) showToast('No se pudo enviar: '+error.message);
+    else renderLogin('Te enviamos un correo para crear una nueva contraseña. Revisa tu bandeja (y la carpeta de spam).');
+  });
+  document.getElementById('lg-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') enviar(); });
+}
+function renderCrearClave(session){
+  document.body.classList.add('locked');
+  const main = document.getElementById('main');
+  main.innerHTML = '<div class="login-wrap"><div class="card" style="padding:28px">'+
+    '<h1 style="font-size:24px;margin-bottom:4px">Crea tu contraseña</h1><p class="subtle" style="margin:0 0 20px">'+esc(session.user.email)+'</p>'+
+    '<div class="field"><label for="nc-1">Nueva contraseña (mínimo 8 caracteres)</label><input id="nc-1" type="password" autocomplete="new-password"></div>'+
+    '<div class="field"><label for="nc-2">Repite la contraseña</label><input id="nc-2" type="password" autocomplete="new-password"></div>'+
+    '<button class="btn-primary" id="nc-btn">Guardar y entrar</button></div></div>';
+  document.getElementById('nc-btn').addEventListener('click', async ()=>{
+    const a = document.getElementById('nc-1').value, b = document.getElementById('nc-2').value;
+    if(a.length < 8){ showToast('La contraseña debe tener al menos 8 caracteres.'); return; }
+    if(a !== b){ showToast('Las dos contraseñas no coinciden.'); return; }
+    const { error } = await sb.auth.updateUser({password:a});
+    if(error){ showToast('No se pudo guardar: '+error.message); return; }
+    history.replaceState(null, '', location.pathname);
+    showToast('Contraseña guardada.'); start(session);
+  });
+}
+async function start(session){
+  document.body.classList.remove('locked');
+  document.getElementById('user-email').textContent = session && session.user ? session.user.email : '';
   document.getElementById('main').innerHTML = '<div class="empty">Cargando datos…</div>';
   await fetchAll();
   render();
+}
+document.getElementById('btn-logout').addEventListener('click', async ()=>{ await sb.auth.signOut(); renderLogin(); });
+
+(async function(){
+  if(!sb){
+    document.getElementById('main').innerHTML = '<div class="banner">Falta conectar la base de datos: busca <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> cerca del inicio del archivo.</div>';
+    return;
+  }
+  const { data } = await sb.auth.getSession();
+  if(data && data.session) (LINK_TIPO ? renderCrearClave(data.session) : start(data.session)); else renderLogin();
+  sb.auth.onAuthStateChange((ev, session)=>{
+    if(ev==='SIGNED_OUT') renderLogin();
+    if(ev==='PASSWORD_RECOVERY' && session) renderCrearClave(session);
+  });
 })();
 </script>
 </body>
